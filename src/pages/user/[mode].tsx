@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Flex,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -14,7 +15,7 @@ import { WhiteBox } from "src/components/whiteBox";
 import useSWR from "swr";
 import { fetchBalance } from "src/repositories/token";
 import { useRouter } from "next/dist/client/router";
-import { withdraw } from "src/repositories/track";
+import { fetchEarnAmount, withdraw } from "src/repositories/track";
 
 
 const UserPage: NextPage = () => {
@@ -22,6 +23,7 @@ const UserPage: NextPage = () => {
   const mode = (router.query.mode as string | undefined) || "stats"
 
   const {data: balance} = useSWR("/token/fetchBalance", (url) => fetchBalance())
+  const {data: earnAmount} = useSWR("/token/fetchEarnAmount", (url) => fetchEarnAmount())
 
   return (
     <AppContainer sidebarContent={(
@@ -66,11 +68,15 @@ const UserPage: NextPage = () => {
               {balance?.toFixed(3)} LAC
             </Box>
           </WhiteBox>
-          <Box mt={4}>
+          <Flex mt={4} align="baseline">
             <Button w={48} color="text.white" background="green.main" variant="box" onClick={() => withdraw()}>
               Withdraw prizes  
             </Button>
-          </Box>
+            <Text ml={4} as="span">
+              <Text fontWeight="bold" as="span">{earnAmount?.toFixed(3)} LAC</Text>
+              {" "}deposited
+            </Text>
+          </Flex>
         </Box>
       </Box>
     </AppContainer>
