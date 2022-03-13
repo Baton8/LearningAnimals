@@ -52,15 +52,16 @@ contract Track is Initializable {
         quizEndTime = block.timestamp + 600 seconds;
 
         // for play prize
-        prizeNftIds.push(animal.mint(address(this), trackId));
-        prizeNftIds.push(animal.mint(address(this), trackId));
-        prizeNftIds.push(animal.mint(address(this), trackId));
-        // for create quiz prize
-        prizeNftIds.push(animal.mint(address(this), trackId));
-        prizeNftIds.push(animal.mint(address(this), trackId));
-        prizeNftIds.push(animal.mint(address(this), trackId));
-        prizeNftIds.push(animal.mint(address(this), trackId));
-        prizeNftIds.push(animal.mint(address(this), trackId));
+        // uint tokenId = animal.mint(msg.sender, trackId);
+        // prizeNftIds.push(tokenId);
+        // // prizeNftIds.push(animal.mint(address(this), trackId));
+        // // prizeNftIds.push(animal.mint(address(this), trackId));
+        // // // for create quiz prize
+        // // prizeNftIds.push(animal.mint(address(this), trackId));
+        // // prizeNftIds.push(animal.mint(address(this), trackId));
+        // // prizeNftIds.push(animal.mint(address(this), trackId));
+        // // prizeNftIds.push(animal.mint(address(this), trackId));
+        // // prizeNftIds.push(animal.mint(address(this), trackId));
     }
 
     //-------------------------------------------------------------------------
@@ -92,15 +93,19 @@ contract Track is Initializable {
         
         if (_correctAnswerCount == 5) {
             correctAllQuizzesPlayerCount += 1;
-            if (correctAllQuizzesPlayerCount == 1) {
-                earnNftTokenIdsOf[msg.sender].push(prizeNftIds[0]);
+
+            if (prizeNftIds.length != 0) {
+                if (correctAllQuizzesPlayerCount == 1) {
+                    earnNftTokenIdsOf[msg.sender].push(prizeNftIds[0]);
+                }
+                if (correctAllQuizzesPlayerCount == 2) {
+                    earnNftTokenIdsOf[msg.sender].push(prizeNftIds[1]);
+                }
+                if (correctAllQuizzesPlayerCount == 3) {
+                    earnNftTokenIdsOf[msg.sender].push(prizeNftIds[2]);
+                }
             }
-            if (correctAllQuizzesPlayerCount == 2) {
-                earnNftTokenIdsOf[msg.sender].push(prizeNftIds[1]);
-            }
-            if (correctAllQuizzesPlayerCount == 3) {
-                earnNftTokenIdsOf[msg.sender].push(prizeNftIds[2]);
-            }
+            
             earnAmountOf[msg.sender] += quizWinPrize;
         }
 
