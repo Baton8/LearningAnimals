@@ -67,7 +67,7 @@ export const fetchSelectedQuiz = async (index: number): Promise<Omit<Quiz, "corr
 export const answerQuiz = async (choiceIndices: number[], time: number): Promise<void> => {
   console.log("answerQuiz/request", {choiceIndices, time})
   const from = await getAccount()
-  await contract.methods.answerQuestion(choiceIndices, time).send({from})
+  await contract.methods.answerQuestion(5, time).send({from})
 }
 
 export const createQuiz = async (question: string, choices: string[], correctIndex: number): Promise<void> => {
@@ -80,7 +80,7 @@ export const createTrack = async (title: string, description: string, prize: num
   const internalPrize = toInternal(prize)
   console.log("createTrack/request", {title, description, internalPrize})
   const from = await getAccount()
-  await contract.methods.initialize(title, description).send({from})
+  await contract.methods.restartTrack(title, description).send({from})
 }
 
 export const withdraw = async (): Promise<void> => {

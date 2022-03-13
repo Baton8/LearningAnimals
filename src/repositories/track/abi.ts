@@ -11,45 +11,19 @@ const ABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "uint256[]",
-				"name": "_choiceIndexs",
-				"type": "uint256[]"
+				"internalType": "uint256",
+				"name": "_correctAnswerCount",
+				"type": "uint256"
 			},
 			{
 				"internalType": "uint256",
-				"name": "time",
+				"name": "_playTime",
 				"type": "uint256"
 			}
 		],
 		"name": "answerQuestion",
 		"outputs": [],
 		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "checkBestQuizPrize",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "checkQuizPrize",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -136,52 +110,6 @@ const ABI = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getTrackResult",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			},
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_title",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_description",
-				"type": "string"
-			}
-		],
-		"name": "initialize",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -296,7 +224,7 @@ const ABI = [
 				"type": "uint256"
 			}
 		],
-		"name": "quizs",
+		"name": "quizzes",
 		"outputs": [
 			{
 				"internalType": "contract QuizNFT",
@@ -305,39 +233,24 @@ const ABI = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "selectQuestionQuiz",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "selectWinnerForQuiz",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "selectedQuiz",
-		"outputs": [
+				"internalType": "string",
+				"name": "_title",
+				"type": "string"
+			},
 			{
-				"internalType": "contract QuizNFT",
-				"name": "",
-				"type": "address"
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
 			}
 		],
-		"stateMutability": "view",
+		"name": "restartTrack",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -361,6 +274,6 @@ const ABI = [
 		"type": "function"
 	}
 ] as AbiItem[];
-const ADDRESS = "6954ae71e9dE0Bd36d93d620Ba2C4A6453D5b165";
+const ADDRESS = "6506feB25b618a035c0EA636cE3963E7AF63712F";
 
 export const contract = new web3.eth.Contract(ABI, ADDRESS);
