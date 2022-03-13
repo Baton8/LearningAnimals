@@ -16,6 +16,7 @@ import useSWR from "swr";
 import { fetchBalance } from "src/repositories/token";
 import { useRouter } from "next/dist/client/router";
 import { fetchEarnAmount, withdraw } from "src/repositories/track";
+import { formatNumber } from "src/utils/formatNumber";
 
 
 const UserPage: NextPage = () => {
@@ -65,7 +66,7 @@ const UserPage: NextPage = () => {
           </Text>
           <WhiteBox px={8} py={6} variant="box">
             <Box fontSize="2xl" fontWeight="bold">
-              {balance?.toFixed(3)} LAC
+              {formatNumber(balance, 3)} LAC
             </Box>
           </WhiteBox>
           <Flex mt={4} align="baseline">
@@ -73,7 +74,7 @@ const UserPage: NextPage = () => {
               Withdraw prizes  
             </Button>
             <Text ml={4} as="span">
-              <Text fontWeight="bold" as="span">{earnAmount?.toFixed(3)} LAC</Text>
+              <Text fontWeight="bold" as="span">{formatNumber(earnAmount, 3)} LAC</Text>
               {" "}deposited
             </Text>
           </Flex>

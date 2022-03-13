@@ -20,6 +20,7 @@ import { QuizCreator } from "src/components/quizCreator";
 import { QuizPane } from "src/components/quizPane";
 import { TrackCreator } from "src/components/trackCreator";
 import { useRouter } from "next/dist/client/router";
+import { formatNumber } from "src/utils/formatNumber";
 
 
 // none (トラック未開催), learning (記事投稿フェーズ), answering (クイズ解答フェーズ), finished (終了後)
@@ -152,9 +153,9 @@ const TrackPage: NextPage = () => {
                 </Box>
                 <Box mt={4} fontSize="lg" color="text.white" textShadow="overImage">
                    All participants will receive:{" "}
-                   <Text fontWeight="bold" as="span">{quizEntryPrize?.toFixed(3)} LAC</Text><br/>
+                   <Text fontWeight="bold" as="span">{formatNumber(quizEntryPrize, 3)} LAC</Text><br/>
                    Winners will receive:{" "}
-                   <Text fontWeight="bold" as="span">{quizWinPrize?.toFixed(3)} LAC</Text>
+                   <Text fontWeight="bold" as="span">{formatNumber(quizWinPrize, 3)} LAC</Text>
                 </Box>
               </Flex>
               <WhiteBox 

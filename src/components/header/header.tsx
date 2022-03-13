@@ -3,6 +3,7 @@ import { FaChevronRight } from "react-icons/fa"
 import useSWR from "swr"
 import { fetchBalance } from "src/repositories/token"
 import NextLink from "next/link"
+import { formatNumber } from "src/utils/formatNumber"
 
 
 type Props = {
@@ -25,7 +26,7 @@ export const Header: React.FC<Props> = ({
         <NextLink href="/user" passHref={true}>
           <Button px={4} py={3} h="auto" fontWeight="bold" alignItems="center" variant="box">
             <Avatar size="sm" mr={3}/>
-            {balance?.toFixed(3)} LAC
+            {formatNumber(balance, 3)} LAC
             <Icon ml={2} as={FaChevronRight}/>
           </Button>
         </NextLink>
