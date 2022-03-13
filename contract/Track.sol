@@ -9,14 +9,14 @@ import {AnimalNFT} from "../contracts/AnimalNFT.sol";
 
 contract Track is Initializable {
 
-    address TokenAddress = 0x91769c8fDDc589306ba16d0b367a26E035bF5bDA;
+    address TokenAddress = 0xeCb06A68aF039A044586328Ab73059f0b297922f;
     AnimalNFT animal;
     IERC20 public lac = ERC20(TokenAddress);
 
     using Counters for Counters.Counter;
     Counters.Counter private _trackIdCounter;
 
-    // initialize
+    // init
     string public title;
     string public description;
     address owner;
@@ -27,12 +27,16 @@ contract Track is Initializable {
     uint public quizEndTime;
     uint public quizCreateEntryStartTime;
     uint public quizCreateEntryEndTime;
+    uint[] public prizeNftIds;
+    uint internal correctAllQuizzesPlayerCount;
     
+    // perma
     QuizNFT[] public quizzes;
-    QuizNFT[] public selectedQuizzes;
-
-    mapping(address => uint) public earnAmountOf;
-    mapping(QuizNFT => uint) trackIdOf;
+    mapping(address => uint) public earnAmountOf; // earn amount of an adress
+    mapping(address => uint[]) public earnNftTokenIdsOf; // earn nft token IDs of an adress
+    mapping(QuizNFT => uint) trackIdOf; // track ID of quiz
+    mapping(uint => QuizNFT[]) selectedQuizzesOf; // selected quizzes of a track
+    mapping(uint => uint) numberOfQuizOf; // number of quizzes of a track
     
     constructor() {}
 
@@ -46,10 +50,21 @@ contract Track is Initializable {
         quizCreateEntryEndTime = block.timestamp + 300 seconds;
         quizStartTime =  block.timestamp + 300 seconds;
         quizEndTime = block.timestamp + 600 seconds;
+
+        // for play prize
+        prizeNftIds.push(animal.mint(address(this), trackId));
+        prizeNftIds.push(animal.mint(address(this), trackId));
+        prizeNftIds.push(animal.mint(address(this), trackId));
+        // for create quiz prize
+        prizeNftIds.push(animal.mint(address(this), trackId));
+        prizeNftIds.push(animal.mint(address(this), trackId));
+        prizeNftIds.push(animal.mint(address(this), trackId));
+        prizeNftIds.push(animal.mint(address(this), trackId));
+        prizeNftIds.push(animal.mint(address(this), trackId));
     }
 
     //-------------------------------------------------------------------------
-    // PUBLIC FUNC
+    // PUBLIC FUNCTIONS
     //-------------------------------------------------------------------------
 
       function createQuiz(string memory _question, string[4] memory _choices, uint _correctIndex) public {
@@ -57,6 +72,7 @@ contract Track is Initializable {
          QuizNFT newQuiz = new QuizNFT(newQuizId, _question, _choices, _correctIndex);
          quizzes.push(newQuiz);
          trackIdOf[newQuiz] = trackId;
+         numberOfQuizOf[trackId] += 1;
       }
 
      function answerQuestion(uint[] memory _choosedIndices, uint _playTime) public {
@@ -69,51 +85,82 @@ contract Track is Initializable {
 
         uint _correctAnswerCount = 0;
         for(uint i = 0; i < 5; i++) { 
-            if (_choosedIndices[i] == selectedQuizzes[i].getCorrectIndex()) {
+            if (_choosedIndices[i] == selectedQuizzesOf[trackId][i].getCorrectIndex()) {
                 _correctAnswerCount++;
             }
         }
         
         if (_correctAnswerCount == 5) {
+            correctAllQuizzesPlayerCount += 1;
+            if (correctAllQuizzesPlayerCount == 1) {
+                earnNftTokenIdsOf[msg.sender].push(prizeNftIds[0]);
+            }
+            if (correctAllQuizzesPlayerCount == 2) {
+                earnNftTokenIdsOf[msg.sender].push(prizeNftIds[1]);
+            }
+            if (correctAllQuizzesPlayerCount == 3) {
+                earnNftTokenIdsOf[msg.sender].push(prizeNftIds[2]);
+            }
             earnAmountOf[msg.sender] += quizWinPrize;
         }
-        if (_playTime == _playTime) {}
+
+        if (_playTime == _playTime) {
+            // unused
+        }
      }
 
      function withdraw() public payable {
          lac.transfer(msg.sender, earnAmountOf[msg.sender]);
+         earnAmountOf[msg.sender] = 0;
      }
 
-     function getNFTofWinQuiz(uint _tokenId) public {
-         animal.transfer(owner, msg.sender, _tokenId);
-     }
-
-     function startQuiz() public {
-        if (selectedQuizzes.length == 0) {
-             selectedQuizzes.push(quizzes[0]);
-             selectedQuizzes.push(quizzes[1]);
-             selectedQuizzes.push(quizzes[2]);
-             selectedQuizzes.push(quizzes[3]);
-             selectedQuizzes.push(quizzes[4]);
+     function transferNft() public payable {
+         for(uint i = 0; i < earnNftTokenIdsOf[msg.sender].length; i++) { 
+             animal.transfer(address(this), msg.sender, earnNftTokenIdsOf[msg.sender][i]);
          }
      }
 
+     function startQuiz() public {
+        if (selectedQuizzesOf[trackId].length == 0) {
+             selectedQuizzesOf[trackId].push(quizzes[0]);
+             selectedQuizzesOf[trackId].push(quizzes[1]);
+             selectedQuizzesOf[trackId].push(quizzes[2]);
+             selectedQuizzesOf[trackId].push(quizzes[3]);
+             selectedQuizzesOf[trackId].push(quizzes[4]);
+         }
+     }
 
     //-------------------------------------------------------------------------
     // VIEW FUNCTIONS
     //-------------------------------------------------------------------------
 
      function getSelectedQuizzes(uint _questionIndex) public view returns(string memory, string[] memory) {
-        string memory question = selectedQuizzes[_questionIndex].getQuestion();
-        string[] memory choices = selectedQuizzes[_questionIndex].getChoices();
+        string memory question = selectedQuizzesOf[trackId][_questionIndex].getQuestion();
+        string[] memory choices = selectedQuizzesOf[trackId][_questionIndex].getChoices();
         return (question, choices);
      }
 
      function getQuizzes() public view returns(QuizNFT[] memory) {
-        return quizzes;
+        QuizNFT[] memory quizzesInCurrectTrack = new QuizNFT[](numberOfQuizOf[trackId]);
+        uint j = 0;
+        for(uint i = 0; i < quizzes.length; i++) { 
+            if (trackIdOf[quizzes[i]] == trackId) {
+                quizzesInCurrectTrack[j] = quizzes[i];
+                j ++;
+            }
+        }
+        return quizzesInCurrectTrack;
      }
 
       function isEndTrack() public view returns (bool) {
          return block.timestamp > quizEndTime;
+      }
+
+      function earnNfts() public view returns (string[] memory) {
+         string[] memory urls = new string[](earnNftTokenIdsOf[msg.sender].length);
+         for(uint i = 0; i < earnNftTokenIdsOf[msg.sender].length; i++) { 
+             urls[i] = animal.tokenURI(earnNftTokenIdsOf[msg.sender][i]);
+         }
+         return urls;
       }
 }
