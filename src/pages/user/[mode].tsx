@@ -63,7 +63,7 @@ const UserPage: NextPage = () => {
           </Text>
           <WhiteBox px={8} py={6} variant="box">
             <Box fontSize="2xl" fontWeight="bold">
-              {balance} LAC
+              {balance?.toFixed(3)} LAC
             </Box>
           </WhiteBox>
           <Box mt={4}>
