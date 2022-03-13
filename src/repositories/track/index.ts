@@ -1,4 +1,6 @@
 import dayjs, { Dayjs } from "dayjs"
+import { fetchQuiz, Quiz } from "../quiz"
+import { toDisplay, toInternal } from "../token"
 import { getAccount } from "../web3"
 import { contract } from "./abi"
 
@@ -8,82 +10,80 @@ export const fetchTitle = async (): Promise<string> => {
   return result
 }
 
-export const fetchQuizEntryPrize = async (): Promise<string> => {
-  const result = await contract.methods.quizEntryPrize().call()
-  return result
-}
-
-export const fetchArticleEntryPrize = async (): Promise<string> => {
-  const prize = await contract.methods.writeArticleEntryPrize().call()
+// クイズコンペティション参加者への支払額
+export const fetchQuizEntryPrize = async (): Promise<number> => {
+  const prize = toDisplay(await contract.methods.quizEntryPrize().call())
   return prize
 }
 
-export const fetchQuizStartDay = async (): Promise<Dayjs> => {
+// クイズコンペティション上位者への支払額
+export const fetchQuizWinPrize = async (): Promise<number> => {
+  const prize = toDisplay(await contract.methods.quizWinPrize().call())
+  return prize
+}
+
+export const fetchCreateQuizStartDay = async (): Promise<Dayjs> => {
+  const rawDay = await contract.methods.quizCreateEntryStartTime().call()
+  const day = dayjs(rawDay * 1000)
+  return day
+}
+
+export const fetchCreateQuizEndDay = async (): Promise<Dayjs> => {
+  const rawDay = await contract.methods.quizCreateEntryEndTime().call()
+  const day = dayjs(rawDay * 1000)
+  return day
+}
+
+export const fetchAnswerQuizStartDay = async (): Promise<Dayjs> => {
   const rawDay = await contract.methods.quizStartTime().call()
   const day = dayjs(rawDay * 1000)
   return day
 }
 
-export const fetchQuizEndDay = async (): Promise<Dayjs> => {
+export const fetchAnswerQuizEndDay = async (): Promise<Dayjs> => {
   const rawDay = await contract.methods.quizEndTime().call()
   const day = dayjs(rawDay * 1000)
   return day
 }
 
-export const fetchArticleStartDay = async (): Promise<Dayjs> => {
-  const rawDay = await contract.methods.articleEntryStartTime().call()
-  const day = dayjs(rawDay * 1000)
-  return day
-}
-
-export const fetchArticleEndDay = async (): Promise<Dayjs> => {
-  const rawDay = await contract.methods.articleEntryEndTime().call()
-  const day = dayjs(rawDay * 1000)
-  return day
-}
-
-export type Article = {
-  title: string,
-  url: string,
-  favorites: number,
-}
-
-export const fetchArticles = async (): Promise<Article[]> => {
-  const articleCount = (await contract.methods.getArticles().call()).length
-  const articles = await Promise.all(Array.from({length: articleCount}).map(async (dummy, index) => {
-    const rawArticle = await contract.methods.getArticle(index).call()
-    const article = {title: rawArticle[0], url: rawArticle[1], favorites: +rawArticle[2]}
-    return article 
+// 投稿された全てのクイズ
+export const fetchQuizzes = async (): Promise<Quiz[]> => {
+  const addresses = await contract.methods.getQuizzes().call() as string[]
+  console.log("fetchQuizzes/response", addresses)
+  const quizzes = await Promise.all(addresses.map(async (address) => {
+    const quiz = await fetchQuiz(address)
+    return quiz
   }))
-  console.log(articles)
-  return articles
+  return quizzes
 }
 
-export type Quiz = {
-  question: string,
-  choices: string[],
-  correctIndex: number,
-}
-const dummyQuestion = "Abji ifeoaho iegh ei aojfe afjoeifj fh rhuao ghoav, si dhgra hugigraih gua uhfea. Shrg, e feu auefaj haufea rh huifarhi?"
-
-export const fetchQuizzes = async (): Promise<any> => {
-  const addresses = await contract.methods.quizs().call()
-  console.log(addresses)
-}
-
-export const fetchQuiz = async (index: number): Promise<Quiz> => {
-  const rawQuiz = await contract.methods.getQuiz(index).call()
-  return {question: rawQuiz[0] || dummyQuestion, choices: rawQuiz[1], correctIndex: 0}
+// クイズコンペティションで出題する選ばれたクイズ
+export const fetchSelectedQuiz = async (index: number): Promise<Omit<Quiz, "correctIndex">> => {
+  const rawQuiz = await contract.methods.getSelectedQuizzes(index).call()
+  const quiz = {question: rawQuiz[0], choices: rawQuiz[1]}
+  return quiz
 }
 
 export const answerQuiz = async (choiceIndices: number[], time: number): Promise<void> => {
-  console.log("answerQuiz", {choiceIndices, time})
+  console.log("answerQuiz/request", {choiceIndices, time})
   const from = await getAccount()
   await contract.methods.answerQuestion(choiceIndices, time).send({from})
 }
 
 export const createQuiz = async (question: string, choices: string[], correctIndex: number): Promise<void> => {
-  console.log("createQuiz", {question, choices, correctIndex})
+  console.log("createQuiz/request", {question, choices, correctIndex})
   const from = await getAccount()
   await contract.methods.createQuiz(question, choices, correctIndex).send({from})
+}
+
+export const createTrack = async (title: string, description: string, prize: number): Promise<void> => {
+  const internalPrize = toInternal(prize)
+  console.log("createTrack/request", {title, description, internalPrize})
+  const from = await getAccount()
+  await contract.methods.initialize(title, description).send({from})
+}
+
+export const withdraw = async (): Promise<void> => {
+  const from = await getAccount()
+  await contract.methods.withdraw().send({from})
 }

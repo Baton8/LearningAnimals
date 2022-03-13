@@ -56,7 +56,7 @@ export const TrackCreator: React.FC<Props> = ({
                 Total prize pool
               </FormLabel>
               <Flex align="baseline">
-                <Input type="number" variant="box" {...register("prize")}/>
+                <Input type="number" step="0.01" variant="box" {...register("prize")}/>
                 <Box ml={2}>LAC</Box>
               </Flex>
             </FormControl>

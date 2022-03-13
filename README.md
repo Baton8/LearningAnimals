@@ -1,12 +1,12 @@
 # LearningAnimals
 
-![アセット 4@3x](https://user-images.githubusercontent.com/7918776/158004881-a814c5ca-87a8-4dc5-9ca2-b4e9b604b684.png)
+![LA-37](https://user-images.githubusercontent.com/7918776/158055478-c91c1851-f1ef-4a38-af23-adcd85a46714.png)
+
+http://learninganimals.io/
 
 ## About
 
-LearningAnimals is a Web3 quiz game where you can learn and earn by playing.
-Each quiz competition is regularly held on a single topic.
-The users can earn $LAC tokens by answering quizzes or creating quizzes on the topic.
+LearningAnimals is a quiz-themed web3 application. It is a place where you can learn and earn by playing  quiz.
 
 The quiz theme can be freely decided by the quiz organizer.
 The competition will be opened with a selection of user-generated quizzes.
@@ -23,3 +23,10 @@ The ways to earn tokens are as follows:
 2. Create a quiz
 3. Win a quiz competition
 4. Be selected for a good quiz
+
+## Design
+
+https://www.figma.com/file/uMvguG8pKhc9S0gNwTwoVB/Learning-Animals?node-id=184%3A2536
+
+
+

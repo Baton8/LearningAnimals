@@ -26,7 +26,8 @@ export const QuizPageAvantLayout: React.FC<Props> = ({
       w="full" h="100vh" px={24} py={12}
       direction="column"
       align="center" justify="center"
-      bgGradient="linear(to-br, background.blue.start, background.blue.end)"
+      background="url('/quiz_background.png')"
+      backgroundSize="cover"
     >
       <Box w="full" maxW="800px">
         <Flex color="text.white" direction="column" align="center">

@@ -1,12 +1,13 @@
 import { Box, Button, Flex, Icon, Stack, Text } from "@chakra-ui/react"
 import { useState } from "react"
 import { FaStar } from "react-icons/fa"
-import { Quiz } from "src/repositories/track"
+import type { TrackPhase } from "src/pages"
+import { Quiz } from "src/repositories/quiz"
 
 
 type Props = {
   quiz: Quiz,
-  phase: string,
+  phase: TrackPhase,
 }
 
 export const QuizPane: React.FC<Props> = ({

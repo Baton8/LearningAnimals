@@ -25,7 +25,7 @@ export const Header: React.FC<Props> = ({
         <NextLink href="/user" passHref={true}>
           <Button px={4} py={3} h="auto" fontWeight="bold" alignItems="center" variant="box">
             <Avatar size="sm" mr={3}/>
-            {balance} LAC
+            {balance?.toFixed(3)} LAC
             <Icon ml={2} as={FaChevronRight}/>
           </Button>
         </NextLink>
