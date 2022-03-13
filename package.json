@@ -15,7 +15,6 @@
     "@chakra-ui/react": "^1.6.8",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
-    "@metamask/detect-provider": "^1.2.0",
     "axios": "^0.23.0",
     "axios-case-converter": "^0.9.0",
     "dayjs": "^1.10.7",

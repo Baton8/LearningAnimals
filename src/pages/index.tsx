@@ -23,7 +23,7 @@ import { QuizPane } from "src/components/quizPane";
 import { TrackCreator } from "src/components/trackCreator";
 import { useRouter } from "next/dist/client/router";
 import { formatNumber } from "src/utils/formatNumber";
-
+import { useToast } from "@chakra-ui/react"
 
 // none (トラック未開催), learning (記事投稿フェーズ), answering (クイズ解答フェーズ), finished (終了後)
 export type TrackPhase = "none" | "learning" | "answering" | "finished"
@@ -82,6 +82,8 @@ const TrackPage: NextPage = () => {
   const phase = getPhase(answerQuizStartDay, answerQuizEndDay)
   const [days, hours, minutes, seconds] = getRemainingTime(answerQuizStartDay, answerQuizEndDay)
 
+  const toast = useToast()
+
   const handleStartClick = useCallback(async () => {
     setIsStartLoading(true)
     await startQuiz()
@@ -92,6 +94,21 @@ const TrackPage: NextPage = () => {
   // カウントダウン更新用
   const [, setDummy] = useState(0)
   useEffect(() => {
+    const provider = (window as any).ethereum
+    if (!provider) {
+      toast({title: "Metamask is not installed, please install!", status: "error", position: "top"})
+    } else {
+      const chainId = provider.request({ method: "eth_chainId" });
+      const testChainId = '0x4'
+      if (chainId !== testChainId) {
+        try {
+          provider.request({method: 'wallet_switchEthereumChain', params: [{ chainId: testChainId}]});
+        } catch (switchError) {
+          toast({title: "Failed to switch to the network", status: "error", position: "top"})
+        }
+      }
+    }
+  
     const interval = setInterval(() => {
       setDummy((dummy) => dummy + 1)
     }, 50)
