@@ -146,7 +146,7 @@ export const createTestQuizzes = async (): Promise<void> => {
       ).send({from})  
     } else {
       await contract.methods.createQuiz(
-        "Which is the unabbreviate term for P2P?",
+        "Which is the unabbreviated term for P2P?",
         ["Pay to Pay", "Peer to Peer", "Person to Person", "Pot to Pot"],
         1
       ).send({from})  
