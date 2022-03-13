@@ -319,6 +319,6 @@ const ABI = [
 		"type": "function"
 	}
 ] as AbiItem[];
-const ADDRESS = "4e18350e910B0331D5f8e83313Ba5d00E99116d2";
+const ADDRESS = "5951d4180A9683bB83d21cD179867533f3940312";
 
 export const contract = new web3.eth.Contract(ABI, ADDRESS);

@@ -72,12 +72,15 @@ const TrackPage: NextPage = () => {
 
   const [isQuizCreatorOpen, setIsQuizCreatorOpen] = useState(false)
   const [isTrackCreatorOpen, setIsTrackCreatorOpen] = useState(false)
+  const [isStartLoading, setIsStartLoading] = useState(false)
 
   const phase = getPhase(answerQuizStartDay, answerQuizEndDay)
   const [days, hours, minutes, seconds] = getRemainingTime(answerQuizStartDay, answerQuizEndDay)
 
   const handleStartClick = useCallback(async () => {
+    setIsStartLoading(true)
     await startQuiz()
+    setIsStartLoading(false)
     router.push("/quiz")
   }, [router])
 
@@ -187,6 +190,7 @@ const TrackPage: NextPage = () => {
                 fontSize="xl" fontWeight="bold" color="text.white"
                 background={phase === "answering" ? "red.main" : "background.transparent"}
                 isDisabled={phase === "learning" ? true : false}
+                isLoading={isStartLoading}
                 variant={phase === "answering" ? "invBox" : "box"}
                 onClick={handleStartClick}
               >
