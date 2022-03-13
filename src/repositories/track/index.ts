@@ -1,3 +1,4 @@
+import axios from "axios"
 import dayjs, { Dayjs } from "dayjs"
 import { fetchQuiz, Quiz } from "../quiz"
 import { toDisplay, toInternal } from "../token"
@@ -96,7 +97,20 @@ export const createTrack = async (title: string, description: string, prize: num
   await contract.methods.restartTrack(title, description).send({from})
 }
 
-export const withdraw = async (): Promise<void> => {
+export const fetchDealtAnimalSpecs = async (): Promise<any> => {
+  const urls = await contract.methods.earn().call() as string[]
+  const specs = await Promise.all(urls.map(async (url) => {
+    return axios.get(url)
+  }))
+  return specs
+}
+
+export const withdrawTokens = async (): Promise<void> => {
+  const from = await getAccount()
+  await contract.methods.withdraw().send({from})
+}
+
+export const withdrawAnimals = async (): Promise<void> => {
   const from = await getAccount()
   await contract.methods.withdraw().send({from})
 }

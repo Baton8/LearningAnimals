@@ -15,7 +15,7 @@ import { WhiteBox } from "src/components/whiteBox";
 import useSWR from "swr";
 import { fetchBalance } from "src/repositories/token";
 import { useRouter } from "next/dist/client/router";
-import { fetchEarnAmount, withdraw } from "src/repositories/track";
+import { fetchEarnAmount, withdrawAnimals, withdrawTokens } from "src/repositories/track";
 import { formatNumber } from "src/utils/formatNumber";
 
 
@@ -70,13 +70,18 @@ const UserPage: NextPage = () => {
             </Box>
           </WhiteBox>
           <Flex mt={4} align="baseline">
-            <Button w={48} color="text.white" background="green.main" variant="box" onClick={() => withdraw()}>
-              Withdraw prizes  
+            <Button w={48} color="text.white" background="green.main" variant="box" onClick={() => withdrawTokens()}>
+              Withdraw coins
             </Button>
             <Text ml={4} as="span">
               <Text fontWeight="bold" as="span">{formatNumber(earnAmount, 3)} LAC</Text>
               {" "}deposited
             </Text>
+          </Flex>
+          <Flex mt={4} align="baseline">
+            <Button w={48} color="text.white" background="green.main" variant="box" onClick={() => withdrawAnimals()}>
+              Withdraw NFTs
+            </Button>
           </Flex>
         </Box>
       </Box>
