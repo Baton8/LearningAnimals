@@ -1,6 +1,6 @@
 # LearningAnimals
 
-![LA_cover (1)](https://user-images.githubusercontent.com/7918776/158054784-ec557326-49c8-4aa8-9f52-e06aa7b6cbe0.png)
+![LA-37](https://user-images.githubusercontent.com/7918776/158055478-c91c1851-f1ef-4a38-af23-adcd85a46714.png)
 
 http://learninganimals.io/
 
