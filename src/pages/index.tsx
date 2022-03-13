@@ -22,7 +22,7 @@ import { Tnum } from "src/components/tnum";
 // learning (記事投稿フェーズ), answering (クイズ解答フェーズ), finished (終了後)
 type TrackStatus = "learning" | "answering" | "finished"
 
-const getStatus = (quizStartDay: Dayjs | undefined, quizEndDay: Dayjs | undefined): TrackStatus => {
+const getPhase = (quizStartDay: Dayjs | undefined, quizEndDay: Dayjs | undefined): TrackStatus => {
   if (quizStartDay != null && quizEndDay != null) {
     const now = dayjs()
     if (now.isBefore(quizStartDay)) {
@@ -64,7 +64,7 @@ const TrackPage: NextPage = () => {
   const {data: articles} = useSWR("/track/fetchArticles", (url) => fetchArticles())
   const {data: quizzes} = useSWR("/track/fetchQuizzes", (url) => fetchQuizzes())
 
-  const status = getStatus(quizStartDay, quizEndDay)
+  const phase = getPhase(quizStartDay, quizEndDay)
   const [days, hours, minutes, seconds] = getRemainingTime(quizStartDay, quizEndDay)
 
   const [, setDummy] = useState(0)
@@ -77,7 +77,7 @@ const TrackPage: NextPage = () => {
 
   return (
     <AppContainer
-      bgGradient={status === "answering" ? "linear(to-br, background.blue.start, background.blue.end)" : "linear(to-br, background.main, background.main)"}
+      bgGradient={phase === "answering" ? "linear(to-br, background.blue.start, background.blue.end)" : "linear(to-br, background.main, background.main)"}
       backgroundAttachment="fixed"
     >
       <Flex
@@ -129,9 +129,9 @@ const TrackPage: NextPage = () => {
             </WhiteBox>
           </Flex>
           <Box mt={10}>
-            {status !== "learning" && (
+            {phase !== "learning" && (
               <Box mb={2} fontSize="xl" fontWeight="bold" color="text.white" textAlign="center">
-                {status !== "answering" ? "This track is finished" : (
+                {phase !== "answering" ? "This track is finished" : (
                   <>
                     {days > 0 && <><Tnum number={days}/>&nbsp;{days === 1 ? "day" : "days"}&nbsp;·&nbsp;</>}
                     {hours > 0 && <><Tnum number={hours} length={2}/>:</>}
@@ -145,11 +145,11 @@ const TrackPage: NextPage = () => {
               <Button
                 w={60} h={16}
                 fontSize="xl" fontWeight="bold" color="text.white"
-                background={status === "answering" ? "red.main" : "background.transparent"}
-                isDisabled={status === "learning" ? true : false}
-                variant={status === "answering" ? "invertedBox" : "box"}
+                background={phase === "answering" ? "red.main" : "background.transparent"}
+                isDisabled={phase === "learning" ? true : false}
+                variant={phase === "answering" ? "invertedBox" : "box"}
               >
-                {status !== "learning" ? "Start" : (
+                {phase !== "learning" ? "Start" : (
                   <>
                     {days > 0 && <><Tnum number={days}/>&nbsp;{days === 1 ? "day" : "days"}&nbsp;·&nbsp;</>}
                     {hours > 0 && <><Tnum number={hours} length={2}/>:</>}
@@ -163,7 +163,7 @@ const TrackPage: NextPage = () => {
         </Flex>
       </Flex>
       <Box w="full" maxW="1200px">
-        {status === "learning" && (
+        {phase === "learning" && (
           <Box w="full" maxW="1000px" mt={12} mx="auto" color="text.black">
             <Box>
               <Text align="center" fontSize="2xl" fontWeight="bold">It&apos;s time to study</Text>
@@ -205,10 +205,10 @@ const TrackPage: NextPage = () => {
             </Box>
           </Box>
         )}
-        <Box w="full" mt={12} color={status === "answering" ? "text.white" : "text.black"}>
+        <Box w="full" mt={12} color={phase === "answering" ? "text.white" : "text.black"}>
           <Box>
             <Text align="center" fontSize="2xl" fontWeight="bold">Quizzes</Text>
-            <Text mt={2} fontSize="sm" color={status === "answering" ? "text.darkgray" : "text.gray"} align="center" lineHeight="shorter">
+            <Text mt={2} fontSize="sm" color={phase === "answering" ? "text.darkgray" : "text.gray"} align="center" lineHeight="shorter">
               The following are all the quizzes that everyone put together.<br/>
               Read them carefully as you will be asked from them!
             </Text>
@@ -220,7 +220,7 @@ const TrackPage: NextPage = () => {
                   w="full" h="full" px={4} py={4}
                   whiteSpace="normal" textAlign="left"
                   flexDirection="column" alignItems="flex-start" justifyContent="space-between"
-                  variant={status === "answering" ? "invertedBox" : "box"}
+                  variant={phase === "answering" ? "invertedBox" : "box"}
                 >
                   <Box w="full">
                     <Text w="full" fontWeight="bold">
@@ -240,7 +240,7 @@ const TrackPage: NextPage = () => {
                       w={5} h={5} ml={1}
                       as={FaStar}
                       color="star.off"
-                      sx={{"& path": {stroke: status === "answering" ? "text.white" : "text.black", strokeWidth: 50}}}
+                      sx={{"& path": {stroke: phase === "answering" ? "text.white" : "text.black", strokeWidth: 50}}}
                     />
                   </Flex>
                 </WhiteBox>
