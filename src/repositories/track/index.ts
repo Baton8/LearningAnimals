@@ -47,7 +47,7 @@ export const fetchAnswerQuizEndDay = async (): Promise<Dayjs> => {
   return day
 }
 
-export const fetchEarnAmount = async (): Promise<number> => {
+export const fetchTokenEarnAmount = async (): Promise<number> => {
   const from = await getAccount()
   const amount = toDisplay(await contract.methods.earnAmountOf(from).call())
   return amount

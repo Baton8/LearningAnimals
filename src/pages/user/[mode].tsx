@@ -15,7 +15,7 @@ import { WhiteBox } from "src/components/whiteBox";
 import useSWR from "swr";
 import { fetchBalance } from "src/repositories/token";
 import { useRouter } from "next/dist/client/router";
-import { fetchEarnAmount, withdrawAnimals, withdrawTokens } from "src/repositories/track";
+import { fetchTokenEarnAmount, withdrawAnimals, withdrawTokens } from "src/repositories/track";
 import { formatNumber } from "src/utils/formatNumber";
 
 
@@ -24,7 +24,7 @@ const UserPage: NextPage = () => {
   const mode = (router.query.mode as string | undefined) || "stats"
 
   const {data: balance} = useSWR("/token/fetchBalance", (url) => fetchBalance())
-  const {data: earnAmount} = useSWR("/token/fetchEarnAmount", (url) => fetchEarnAmount())
+  const {data: tokenEarnAmount} = useSWR("/token/fetchTokenEarnAmount", (url) => fetchTokenEarnAmount())
 
   return (
     <AppContainer sidebarContent={(
@@ -74,7 +74,7 @@ const UserPage: NextPage = () => {
               Withdraw coins
             </Button>
             <Text ml={4} as="span">
-              <Text fontWeight="bold" as="span">{formatNumber(earnAmount, 3)} LAC</Text>
+              <Text fontWeight="bold" as="span">{formatNumber(tokenEarnAmount, 3)} LAC</Text>
               {" "}deposited
             </Text>
           </Flex>
