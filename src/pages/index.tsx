@@ -142,7 +142,7 @@ const TrackPage: NextPage = () => {
                   {title || "[Untitled Track]"}
                 </Box>
                 <Box
-                  mt={2} px={4}
+                  mt={3} px={4}
                   fontSize="2xl" fontWeight="bold"
                   color="text.white"
                   background={phase === "answering" ? "text.invTitle" : "text.title"}
