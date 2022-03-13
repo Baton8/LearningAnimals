@@ -75,8 +75,13 @@ export const QuizCreator: React.FC<Props> = ({
           </Box>
         </ModalBody>
         <ModalFooter>
-          <Button w={48} color="text.white" background="blue.main" variant="box" type="submit" isLoading={isLoading}>
-            Create
+          <Button
+            w={48}
+            color="text.white" background="blue.main"
+            variant="box"
+            isLoading={isLoading} onClick={handleSubmitValid}
+          >
+            Submit
           </Button>
         </ModalFooter>
       </ModalContent>
