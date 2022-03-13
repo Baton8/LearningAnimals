@@ -17,7 +17,7 @@ export const useCreateTrackForm = (): {
   const defaultValue = {
     title: "",
     description: "",
-    prize: 100
+    prize: 10
   }
   const [isLoading, setIsLoading] = useState(false)
 

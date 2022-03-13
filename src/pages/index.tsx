@@ -124,8 +124,10 @@ const TrackPage: NextPage = () => {
                   {answerQuizStartDay?.format("DD MMM YYYY · HH:mm")}–{answerQuizEndDay?.format("HH:mm")}
                 </Box>
                 <Box mt={4} fontSize="lg">
-                   Whoever attends will receive: {quizEntryPrize} LAC<br/>
-                   Winners will receive: {quizWinPrize} LAC
+                   All participants will receive:{" "}
+                   <Text fontWeight="bold" as="span">{quizEntryPrize?.toFixed(3)} LAC</Text><br/>
+                   Winners will receive:{" "}
+                   <Text fontWeight="bold" as="span">{quizWinPrize?.toFixed(3)} LAC</Text>
                 </Box>
               </Box>
               <WhiteBox 
