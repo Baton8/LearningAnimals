@@ -35,12 +35,12 @@ export const QuizCreator: React.FC<Props> = ({
   isOpen,
   onClose
 }) => {
-  const {isLoading, register, control, handleSubmitValid} = useCreateQuizForm()
+  const {isLoading, register, handleSubmitValid} = useCreateQuizForm()
 
   return (
-    <Modal size="xl" isOpen={isOpen} onClose={onClose}>
+    <Modal size="3xl" isOpen={isOpen} onClose={onClose} isCentered={true} variant="box">
       <ModalOverlay/>
-      <ModalContent background="background.main">
+      <ModalContent>
         <ModalHeader>
           <Text fontSize="4xl" fontWeight="bold" align="center">
             Everyone is waiting for your quiz!
@@ -56,9 +56,9 @@ export const QuizCreator: React.FC<Props> = ({
             </FormControl>
             <FormControl mt={6}>
               <FormLabel fontSize="lg" fontWeight="bold">
-                Answer
+                Correct answer
               </FormLabel>
-              <Textarea h={28} variant="box" {...register("choices.0")}/>
+              <Input variant="box" {...register("choices.0")}/>
             </FormControl>
             <Box mt={6}>
               <FormLabel fontSize="lg" fontWeight="bold">
@@ -75,11 +75,9 @@ export const QuizCreator: React.FC<Props> = ({
           </Box>
         </ModalBody>
         <ModalFooter>
-          <Flex direction="column" align="center">
-            <Button w={48} color="text.white" background="blue.main" variant="box" type="submit" isLoading={isLoading}>
-              Create
-            </Button>
-          </Flex>
+          <Button w={48} color="text.white" background="blue.main" variant="box" type="submit" isLoading={isLoading}>
+            Create
+          </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
