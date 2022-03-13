@@ -18,6 +18,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { AppContainer } from "src/components/appContainer";
 import { Tnum } from "src/components/tnum";
 import { QuizCreator } from "src/components/quizCreator";
+import { QuizPane } from "src/components/quizPane";
 
 
 // none (トラック未開催), learning (記事投稿フェーズ), answering (クイズ解答フェーズ), finished (終了後)
@@ -62,14 +63,24 @@ const TrackPage: NextPage = () => {
   const {data: articleEntryPrize} = useSWR("/track/fetchArticleEntryPrize", (url) => fetchArticleEntryPrize())
   const {data: quizStartDay} = useSWR("/track/fetchQuizStartDay", (url) => fetchQuizStartDay())
   const {data: quizEndDay} = useSWR("/track/fetchQuizEndDay", (url) => fetchQuizEndDay())
-  const {data: articles} = useSWR("/track/fetchArticles", (url) => fetchArticles())
-  const {data: quizzes} = useSWR("/track/fetchQuizzes", (url) => fetchQuizzes())
+  // const {data: quizzes} = useSWR("/track/fetchQuizzes", (url) => fetchQuizzes())
+
+  const quizzes = [
+    {question: "Djana il esperion brield dra froeidier, bea dingolea il esperion?", choices: ["A", "B", "C", "D"], correctIndex: 0},
+    {question: "Djana il esperion brield dra froeidier, bea dingolea il esperion?", choices: ["A", "B", "C", "D"], correctIndex: 0},
+    {question: "Djana il esperion brield dra froeidier, bea dingolea il esperion?", choices: ["A", "B", "C", "D"], correctIndex: 0},
+    {question: "Djana il esperion brield dra froeidier, bea dingolea il esperion?", choices: ["A", "B", "C", "D"], correctIndex: 0},
+    {question: "Djana il esperion brield dra froeidier, bea dingolea il esperion?", choices: ["A", "B", "C", "D"], correctIndex: 0},
+    {question: "Djana il esperion brield dra froeidier, bea dingolea il esperion?", choices: ["A", "B", "C", "D"], correctIndex: 0},
+    {question: "Djana il esperion brield dra froeidier, bea dingolea il esperion?", choices: ["A", "B", "C", "D"], correctIndex: 0},
+  ]
 
   const [isQuizCreatorOpen, setIsQuizCreatorOpen] = useState(false)
 
   const phase = getPhase(quizStartDay, quizEndDay)
   const [days, hours, minutes, seconds] = getRemainingTime(quizStartDay, quizEndDay)
 
+  // カウントダウン更新用
   const [, setDummy] = useState(0)
   useEffect(() => {
     const interval = setInterval(() => {
@@ -235,42 +246,15 @@ const TrackPage: NextPage = () => {
           <Box w="full" mt={12} color={phase === "answering" ? "text.white" : "text.black"}>
             <Box>
               <Text align="center" fontSize="2xl" fontWeight="bold">Quizzes</Text>
-              <Text mt={2} fontSize="sm" color={phase === "answering" ? "text.darkgray" : "text.gray"} align="center" lineHeight="shorter">
+              <Text mt={2} fontSize="sm" color={phase === "answering" ? "text.invertedGray" : "text.gray"} align="center" lineHeight="shorter">
                 The following are all the quizzes that everyone put together.<br/>
                 Read them carefully as you will be asked from them!
               </Text>
             </Box>
-            <SimpleGrid mt={8} gap={4} w="full" templateColumns="repeat(2, 1fr)">
-              {(articles ?? []).map((article, index) => (
+            <SimpleGrid mt={8} gap={4} w="full" templateColumns="repeat(4, 1fr)">
+              {quizzes.map((quiz, index) => (
                 <GridItem key={index}>
-                  <WhiteBox
-                    w="full" h="full" px={4} py={4}
-                    whiteSpace="normal" textAlign="left"
-                    flexDirection="column" alignItems="flex-start" justifyContent="space-between"
-                    variant={phase === "answering" ? "invertedBox" : "box"}
-                  >
-                    <Box w="full">
-                      <Text w="full" fontWeight="bold">
-                        {article.title || "[No question]"}
-                      </Text>
-                      <SimpleGrid w="full" templateColumns="repeat(2, 1fr)" columnGap={4}>
-                        {["Choice 1", "Choice 2", "Choice 3", "Choice 4"].map((choice, index) => (
-                          <GridItem key={index} fontWeight={index === 1 ? "bold" : undefined} color={index === 1 ? "red.main" : undefined}>
-                            {choice}
-                          </GridItem>
-                        ))}
-                      </SimpleGrid>
-                    </Box>
-                    <Flex w="full" mt={2} fontWeight="bold" align="center" justify="flex-end">
-                      {article.favorites}
-                      <Icon
-                        w={5} h={5} ml={1}
-                        as={FaStar}
-                        color="star.off"
-                        sx={{"& path": {stroke: phase === "answering" ? "text.white" : "text.black", strokeWidth: 50}}}
-                      />
-                    </Flex>
-                  </WhiteBox>
+                  <QuizPane quiz={quiz} phase={phase}/>
                 </GridItem>
               ))}
             </SimpleGrid>

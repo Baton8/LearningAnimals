@@ -4,16 +4,21 @@ import { Colors } from "@chakra-ui/react"
 export const colors: Colors = {
   text: {
     black: "#000000",
-    darkgray: "#8D8D93",
-    gray: "#A4AEB7",
     white: "#FFFFFF",
+
+    gray: "#A4AEB7",
+    invertedGray: "#8D8D93",
+
+    lightgray: "#D7DCE2",
+    invertedLightgray: "",
   },
 
   background: {
     white: "#FFFFFF",
+    black: "#000E40",
+
     darkgray: "",
     gray: "#ECEDF0",
-    black: "#000E40",
 
     main: "#F1F1F1",
     

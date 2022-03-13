@@ -62,6 +62,7 @@ export const fetchArticles = async (): Promise<Article[]> => {
 export type Quiz = {
   question: string,
   choices: string[],
+  correctIndex: number,
 }
 const dummyQuestion = "Abji ifeoaho iegh ei aojfe afjoeifj fh rhuao ghoav, si dhgra hugigraih gua uhfea. Shrg, e feu auefaj haufea rh huifarhi?"
 
@@ -72,7 +73,7 @@ export const fetchQuizzes = async (): Promise<any> => {
 
 export const fetchQuiz = async (index: number): Promise<Quiz> => {
   const rawQuiz = await contract.methods.getQuiz(index).call()
-  return {question: rawQuiz[0] || dummyQuestion, choices: rawQuiz[1]}
+  return {question: rawQuiz[0] || dummyQuestion, choices: rawQuiz[1], correctIndex: 0}
 }
 
 export const answerQuiz = async (choiceIndices: number[], time: number): Promise<void> => {
