@@ -1,6 +1,6 @@
 # LearningAnimals
 
-![アセット 4@3x](https://user-images.githubusercontent.com/7918776/158004881-a814c5ca-87a8-4dc5-9ca2-b4e9b604b684.png)
+![LA_cover (1)](https://user-images.githubusercontent.com/7918776/158054784-ec557326-49c8-4aa8-9f52-e06aa7b6cbe0.png)
 
 http://learninganimals.io/
 
