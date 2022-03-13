@@ -101,7 +101,8 @@ const TrackPage: NextPage = () => {
       <Flex
         alignSelf="stretch" mx={-24} px={24} mt={-32} pt={40} pb={12}
         direction="column" align="center"
-        background="url('https://images.unsplash.com/photo-1620321023374-d1a68fbc720d')" backgroundSize="cover" backgroundPosition="center"
+        background={phase === "answering" ? "url('/track_background_inv.png')" : "url('/track_background.png')"}
+        backgroundSize="cover" backgroundPosition="center"
       >
         {phase === "none" ? (
           <Flex w="full" direction="column" align="center">
@@ -132,7 +133,7 @@ const TrackPage: NextPage = () => {
                 <Box fontSize="5xl" fontWeight="bold" lineHeight="shorter">
                   {title || "[Untitled Track]"}
                 </Box>
-                <Box fontSize="2xl" fontWeight="bold">
+                <Box mt={1} fontSize="2xl" fontWeight="bold">
                   {answerQuizStartDay?.format("DD MMM YYYY · HH:mm")}–{answerQuizEndDay?.format("HH:mm")}
                 </Box>
                 <Box mt={4} fontSize="lg">
@@ -174,7 +175,7 @@ const TrackPage: NextPage = () => {
             </Flex>
             <Box mt={10}>
               {phase === "answering" || phase === "finished" && (
-                <Box mb={2} fontSize="xl" fontWeight="bold" color="text.white" textAlign="center">
+                <Box mb={2} fontSize="xl" fontWeight="bold" color="text.white" textShadow="overImage" textAlign="center">
                   {phase === "finished" ? "This track is finished" : (
                     <>
                       {days > 0 && <><Tnum number={days}/>&nbsp;{days === 1 ? "day" : "days"}&nbsp;·&nbsp;</>}
