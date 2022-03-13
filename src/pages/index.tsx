@@ -19,8 +19,8 @@ import { AppContainer } from "src/components/appContainer";
 import { Tnum } from "src/components/tnum";
 
 
-// learning (記事投稿フェーズ), open (クイズ解答フェーズ), finished (終了後)
-type TrackStatus = "learning" | "open" | "finished"
+// learning (記事投稿フェーズ), answering (クイズ解答フェーズ), finished (終了後)
+type TrackStatus = "learning" | "answering" | "finished"
 
 const getStatus = (quizStartDay: Dayjs | undefined, quizEndDay: Dayjs | undefined): TrackStatus => {
   if (quizStartDay != null && quizEndDay != null) {
@@ -28,9 +28,9 @@ const getStatus = (quizStartDay: Dayjs | undefined, quizEndDay: Dayjs | undefine
     if (now.isBefore(quizStartDay)) {
       return "learning"
     } else if (now.isBefore(quizEndDay)) {
-      return "open"
+      return "answering"
     } else {
-      return "open"
+      return "learning"
     }
   } else {
     return "learning"
@@ -77,7 +77,7 @@ const TrackPage: NextPage = () => {
 
   return (
     <AppContainer
-      bgGradient={status === "open" ? "linear(to-br, background.blue.start, background.blue.end)" : "linear(to-br, background.main, background.main)"}
+      bgGradient={status === "answering" ? "linear(to-br, background.blue.start, background.blue.end)" : "linear(to-br, background.main, background.main)"}
       backgroundAttachment="fixed"
     >
       <Flex
@@ -131,7 +131,7 @@ const TrackPage: NextPage = () => {
           <Box mt={10}>
             {status !== "learning" && (
               <Box mb={2} fontSize="xl" fontWeight="bold" color="text.white" textAlign="center">
-                {status !== "open" ? "This track is finished" : (
+                {status !== "answering" ? "This track is finished" : (
                   <>
                     {days > 0 && <><Tnum number={days}/>&nbsp;{days === 1 ? "day" : "days"}&nbsp;·&nbsp;</>}
                     {hours > 0 && <><Tnum number={hours} length={2}/>:</>}
@@ -145,8 +145,9 @@ const TrackPage: NextPage = () => {
               <Button
                 w={60} h={16}
                 fontSize="xl" fontWeight="bold" color="text.white"
-                background={status === "open" ? "red.main" : "background.transparent"}
-                variant={status === "open" ? "invertedBox" : "box"}
+                background={status === "answering" ? "red.main" : "background.transparent"}
+                isDisabled={status === "learning" ? true : false}
+                variant={status === "answering" ? "invertedBox" : "box"}
               >
                 {status !== "learning" ? "Start" : (
                   <>
@@ -204,10 +205,10 @@ const TrackPage: NextPage = () => {
             </Box>
           </Box>
         )}
-        <Box w="full" mt={12} color={status === "open" ? "text.white" : "text.black"}>
+        <Box w="full" mt={12} color={status === "answering" ? "text.white" : "text.black"}>
           <Box>
             <Text align="center" fontSize="2xl" fontWeight="bold">Quizzes</Text>
-            <Text mt={2} fontSize="sm" color={status === "open" ? "text.darkgray" : "text.gray"} align="center" lineHeight="shorter">
+            <Text mt={2} fontSize="sm" color={status === "answering" ? "text.darkgray" : "text.gray"} align="center" lineHeight="shorter">
               The following are all the quizzes that everyone put together.<br/>
               Read them carefully as you will be asked from them!
             </Text>
@@ -219,7 +220,7 @@ const TrackPage: NextPage = () => {
                   w="full" h="full" px={4} py={4}
                   whiteSpace="normal" textAlign="left"
                   flexDirection="column" alignItems="flex-start" justifyContent="space-between"
-                  variant={status === "open" ? "invertedBox" : "box"}
+                  variant={status === "answering" ? "invertedBox" : "box"}
                 >
                   <Box w="full">
                     <Text w="full" fontWeight="bold">
@@ -239,7 +240,7 @@ const TrackPage: NextPage = () => {
                       w={5} h={5} ml={1}
                       as={FaStar}
                       color="star.off"
-                      sx={{"& path": {stroke: status === "open" ? "text.white" : "text.black", strokeWidth: 50}}}
+                      sx={{"& path": {stroke: status === "answering" ? "text.white" : "text.black", strokeWidth: 50}}}
                     />
                   </Flex>
                 </WhiteBox>
