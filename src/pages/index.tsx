@@ -3,7 +3,6 @@ import type { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 import { WhiteBox } from "src/components/whiteBox";
 import NextLink from "next/link";
-import { FaStar } from "react-icons/fa";
 import useSWR from "swr";
 import {
   fetchArticleEntryPrize,
@@ -19,6 +18,7 @@ import { AppContainer } from "src/components/appContainer";
 import { Tnum } from "src/components/tnum";
 import { QuizCreator } from "src/components/quizCreator";
 import { QuizPane } from "src/components/quizPane";
+import { TrackCreator } from "src/components/trackCreator";
 
 
 // none (トラック未開催), learning (記事投稿フェーズ), answering (クイズ解答フェーズ), finished (終了後)
@@ -76,6 +76,7 @@ const TrackPage: NextPage = () => {
   ]
 
   const [isQuizCreatorOpen, setIsQuizCreatorOpen] = useState(false)
+  const [isTrackCreatorOpen, setIsTrackCreatorOpen] = useState(false)
 
   const phase = getPhase(quizStartDay, quizEndDay)
   const [days, hours, minutes, seconds] = getRemainingTime(quizStartDay, quizEndDay)
@@ -110,16 +111,15 @@ const TrackPage: NextPage = () => {
               </Box>
             </Box>
             <Box mt={10}>
-              <NextLink href="/track/create" passHref={true}>
-                <Button
-                  w={60} h={16}
-                  fontSize="xl" fontWeight="bold" color="text.white"
-                  background="background.transparent"
-                  variant="box"
-                >
-                  Create track
-                </Button>
-              </NextLink>
+              <Button
+                w={60} h={16}
+                fontSize="xl" fontWeight="bold" color="text.white"
+                background="background.transparent"
+                variant="box"
+                onClick={() => setIsTrackCreatorOpen(true)}
+              >
+                Create track
+              </Button>
             </Box>
           </Flex>
         ) : (
@@ -262,6 +262,7 @@ const TrackPage: NextPage = () => {
         )}
       </Box>
       <QuizCreator isOpen={isQuizCreatorOpen} onClose={() => setIsQuizCreatorOpen(false)}/>
+      <TrackCreator isOpen={isTrackCreatorOpen} onClose={() => setIsTrackCreatorOpen(false)}/>
     </AppContainer>
   );
 };

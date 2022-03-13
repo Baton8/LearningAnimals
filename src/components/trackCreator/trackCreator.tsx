@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
   Input,
@@ -10,11 +11,10 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
   Text,
   Textarea
 } from "@chakra-ui/react"
-import { useCreateQuizForm } from "src/hooks/useCreateQuizForm"
+import { useCreateTrackForm } from "src/hooks/useCreateTrackForm"
 
 
 type Props = {
@@ -22,11 +22,11 @@ type Props = {
   onClose: () => void,
 }
 
-export const QuizCreator: React.FC<Props> = ({
+export const TrackCreator: React.FC<Props> = ({
   isOpen,
   onClose
 }) => {
-  const {isLoading, register, handleSubmitValid} = useCreateQuizForm()
+  const {isLoading, register, handleSubmitValid} = useCreateTrackForm()
 
   return (
     <Modal size="3xl" isOpen={isOpen} onClose={onClose} isCentered={true} variant="box">
@@ -34,35 +34,32 @@ export const QuizCreator: React.FC<Props> = ({
       <ModalContent as="form" onSubmit={handleSubmitValid}>
         <ModalHeader>
           <Text fontSize="4xl" fontWeight="bold" align="center">
-            Everyone is waiting for your quiz!
+            Become the next quiz organizer!
           </Text>
         </ModalHeader>
         <ModalBody>
-          <Box as="form" onSubmit={handleSubmitValid}>
+          <Box>
             <FormControl>
               <FormLabel fontSize="lg" fontWeight="bold">
-                Question
+                Track title
               </FormLabel>
-              <Textarea h={28} variant="box" {...register("question")}/>
+              <Input variant="box" {...register("title")}/>
             </FormControl>
             <FormControl mt={6}>
               <FormLabel fontSize="lg" fontWeight="bold">
-                Correct answer
+                Track description
               </FormLabel>
-              <Input variant="box" {...register("choices.0")}/>
+              <Textarea h={28} variant="box" {...register("description")}/>
             </FormControl>
-            <Box mt={6}>
+            <FormControl mt={6}>
               <FormLabel fontSize="lg" fontWeight="bold">
-                Wrong answers
+                Total prize pool
               </FormLabel>
-              <Stack spacing={3}>
-                {Array.from({length: 3}).map((dummy, index) => (
-                  <FormControl key={index}>
-                    <Input variant="box" {...register(`choices.${index + 1}`)}/>
-                  </FormControl>
-                ))}
-              </Stack>
-            </Box>
+              <Flex align="baseline">
+                <Input type="number" variant="box" {...register("prize")}/>
+                <Box ml={2}>LAC</Box>
+              </Flex>
+            </FormControl>
           </Box>
         </ModalBody>
         <ModalFooter>
@@ -72,7 +69,7 @@ export const QuizCreator: React.FC<Props> = ({
             variant="box" type="submit"
             isLoading={isLoading}
           >
-            Submit
+            Create
           </Button>
         </ModalFooter>
       </ModalContent>
