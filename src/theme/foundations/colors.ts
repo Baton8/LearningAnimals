@@ -7,18 +7,18 @@ export const colors: Colors = {
     white: "#FFFFFF",
 
     gray: "#A4AEB7",
-    invertedGray: "#8D8D93",
+    invGray: "#8D8D93",
 
     lightgray: "#D7DCE2",
-    invertedLightgray: "",
+    invLightgray: "",
   },
 
   background: {
     white: "#FFFFFF",
     black: "#000E40",
 
-    darkgray: "",
     gray: "#ECEDF0",
+    invGray: "",
 
     main: "#F1F1F1",
     

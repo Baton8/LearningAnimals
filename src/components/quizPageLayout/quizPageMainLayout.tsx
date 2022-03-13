@@ -92,7 +92,7 @@ export const QuizPageMainLayout: React.FC<Props> = ({
                 h={20}
                 fontSize="2xl"
                 background={`choice.${index}`}
-                variant="invertedBox"
+                variant="invBox"
                 onClick={() => handleChoiceClick(index)}
               >
                 {choice}

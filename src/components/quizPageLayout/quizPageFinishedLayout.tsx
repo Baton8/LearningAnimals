@@ -23,7 +23,7 @@ export const QuizPageFinishedLayout: React.FC<Props> = ({
       align="center" justify="center"
       baxkground="background.main"
     >
-      <WhiteBox px={24} py={10} flexDirection="column" alignItems="center" variant="invertedBox">
+      <WhiteBox px={24} py={10} flexDirection="column" alignItems="center" variant="invBox">
         <Text>Result</Text>
         <Box mt={-1} fontSize="3xl" color="yellow.main">
           <Tnum number={minutes} length={2}/>:

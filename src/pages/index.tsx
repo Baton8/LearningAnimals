@@ -140,7 +140,7 @@ const TrackPage: NextPage = () => {
                 px={8} pb={6}
                 flexDirection="column" alignItems="center"
                 background="background.transparent"
-                rounded="xl" variant="invertedBox"
+                rounded="xl" variant="invBox"
               >
                 <Flex
                   h={8} px={10} mt={-4} mb={4}
@@ -185,7 +185,7 @@ const TrackPage: NextPage = () => {
                   fontSize="xl" fontWeight="bold" color="text.white"
                   background={phase === "answering" ? "red.main" : "background.transparent"}
                   isDisabled={phase === "learning" ? true : false}
-                  variant={phase === "answering" ? "invertedBox" : "box"}
+                  variant={phase === "answering" ? "invBox" : "box"}
                 >
                   {phase === "answering" || phase === "finished" ? "Start" : (
                     <>
@@ -246,7 +246,7 @@ const TrackPage: NextPage = () => {
           <Box w="full" mt={12} color={phase === "answering" ? "text.white" : "text.black"}>
             <Box>
               <Text align="center" fontSize="2xl" fontWeight="bold">Quizzes</Text>
-              <Text mt={2} fontSize="sm" color={phase === "answering" ? "text.invertedGray" : "text.gray"} align="center" lineHeight="shorter">
+              <Text mt={2} fontSize="sm" color={phase === "answering" ? "text.invGray" : "text.gray"} align="center" lineHeight="shorter">
                 The following are all the quizzes that everyone put together.<br/>
                 Read them carefully as you will be asked from them!
               </Text>

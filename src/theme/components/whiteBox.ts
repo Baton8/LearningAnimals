@@ -11,7 +11,7 @@ const whiteBox: ComponentStyleConfig = {
       borderColor: "text.black",
       rounded: "2xl",
     },
-    invertedBox: {
+    invBox: {
       fontWeight: "normal",
       color: "text.white",
       background: "background.black",

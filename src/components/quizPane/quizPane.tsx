@@ -20,7 +20,7 @@ export const QuizPane: React.FC<Props> = ({
       w="full" h="full" px={4} py={4}
       whiteSpace="normal" textAlign="left"
       flexDirection="column" alignItems="flex-start" justifyContent="space-between"
-      variant={phase === "answering" ? "invertedBox" : "box"}
+      variant={phase === "answering" ? "invBox" : "box"}
       onClick={() => setShowAnswer((answer) => !answer)}
     >
       <Box w="full">
@@ -35,7 +35,7 @@ export const QuizPane: React.FC<Props> = ({
             lineHeight="shorter"
             fontWeight={showAnswer && quiz.correctIndex === index ? "bold" : undefined}
             color={showAnswer ? (
-              quiz.correctIndex === index ? "green.main" : (phase === "answering" ? "text.invertedLightgray" : "text.lightgray")
+              quiz.correctIndex === index ? "green.main" : (phase === "answering" ? "text.invLightgray" : "text.lightgray")
             ) : (
               "text.gray"
             )}

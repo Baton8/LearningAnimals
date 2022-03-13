@@ -42,7 +42,7 @@ const button: ComponentStyleConfig = {
         boxShadow: "0rem 0.25rem black",
       },
     }),
-    invertedBox: (props) => ({
+    invBox: (props) => ({
       h: 12,
       fontWeight: "normal",
       color: "text.white",
