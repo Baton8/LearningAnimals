@@ -119,13 +119,37 @@ export const withdrawAnimals = async (): Promise<void> => {
 // TODO: テスト用なので本番では使わないで
 export const createTestTrack = async (): Promise<void> => {
   const from = await getAccount()
-  await contract.methods.restartTrack("Test Track", "Description").send({from})
+  await contract.methods.restartTrack("Dive into Web3 with IPFS", "Description").send({from})
 }
 
 // TODO: テスト用なので本番では使わないで
 export const createTestQuizzes = async (): Promise<void> => {
   const from = await getAccount()
-  await Promise.all(Array.from({length: 5}).map(async () => {
-    await contract.methods.createQuiz("Test question", ["Correct", "Wrong 1", "Wrong 2", "Wrong 3"], 0).send({from})
+  await Promise.all(Array.from({length: 5}).map(async (dummy, index) => {
+    if (index === 0) {
+      await contract.methods.createQuiz(
+        "Which is the unabbreviated name of IPFS?",
+        ["InterPlanetary File System", "Internet File System", "InterPlanetary Folder System", "InterPlanetary Full System"],
+        0
+      ).send({from})
+    } else if (index === 1) {
+      await contract.methods.createQuiz(
+        "Which is the developer of IPFS?",
+        ["Ethereum", "Protocol Labs", "Bitcoin", "Alphabet"],
+        1
+      ).send({from})      
+    } else if (index === 2) {
+      await contract.methods.createQuiz(
+        "Which is the virtual currency used on IPFS that is given according to the time and amount of storage provided?",
+        ["Chainlink", "Ethereum", "Filecoin", "Bitcoin"],
+        2
+      ).send({from})  
+    } else {
+      await contract.methods.createQuiz(
+        "Which is the unabbreviate term for P2P?",
+        ["Pay to Pay", "Peer to Peer", "Person to Person", "Pot to Pot"],
+        1
+      ).send({from})  
+    }
   }))
 }
