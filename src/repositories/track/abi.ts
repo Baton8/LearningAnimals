@@ -11,9 +11,9 @@ const ABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "_correctAnswerCount",
-				"type": "uint256"
+				"internalType": "uint256[]",
+				"name": "_choosedIndices",
+				"type": "uint256[]"
 			},
 			{
 				"internalType": "uint256",
@@ -57,6 +57,25 @@ const ABI = [
 				"internalType": "string",
 				"name": "",
 				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "earnAmountOf",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -254,6 +273,32 @@ const ABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "selectedQuizzes",
+		"outputs": [
+			{
+				"internalType": "contract QuizNFT",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "startQuiz",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "title",
 		"outputs": [
@@ -274,6 +319,6 @@ const ABI = [
 		"type": "function"
 	}
 ] as AbiItem[];
-const ADDRESS = "6506feB25b618a035c0EA636cE3963E7AF63712F";
+const ADDRESS = "4e18350e910B0331D5f8e83313Ba5d00E99116d2";
 
 export const contract = new web3.eth.Contract(ABI, ADDRESS);

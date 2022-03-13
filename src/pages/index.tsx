@@ -1,6 +1,6 @@
 import { Box, Button, Flex, GridItem, Icon, Image, SimpleGrid, Text } from "@chakra-ui/react";
 import type { NextPage } from "next";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { WhiteBox } from "src/components/whiteBox";
 import NextLink from "next/link";
 import useSWR from "swr";
@@ -10,7 +10,8 @@ import {
   fetchQuizEntryPrize,
   fetchQuizWinPrize,
   fetchQuizzes,
-  fetchTitle
+  fetchTitle,
+  startQuiz
 } from "src/repositories/track";
 import dayjs, { Dayjs } from "dayjs";
 import { AppContainer } from "src/components/appContainer";
@@ -18,6 +19,7 @@ import { Tnum } from "src/components/tnum";
 import { QuizCreator } from "src/components/quizCreator";
 import { QuizPane } from "src/components/quizPane";
 import { TrackCreator } from "src/components/trackCreator";
+import { useRouter } from "next/dist/client/router";
 
 
 // none (トラック未開催), learning (記事投稿フェーズ), answering (クイズ解答フェーズ), finished (終了後)
@@ -31,10 +33,10 @@ const getPhase = (startDay: Dayjs | undefined, endDay: Dayjs | undefined): Track
     } else if (now.isBefore(endDay)) {
       return "answering"
     } else {
-      return "learning"
+      return "finished"
     }
   } else {
-    return "learning"
+    return "none"
   }
 }
 
@@ -57,6 +59,8 @@ const getRemainingTime = (startDay: Dayjs | undefined, endDay: Dayjs | undefined
 }
 
 const TrackPage: NextPage = () => {
+  const router = useRouter()
+
   const {data: title} = useSWR("/track/fetchTitle", (url) => fetchTitle())
 
   const {data: quizEntryPrize} = useSWR("/track/fetchQuizEntryPrize", (url) => fetchQuizEntryPrize())
@@ -71,6 +75,11 @@ const TrackPage: NextPage = () => {
 
   const phase = getPhase(answerQuizStartDay, answerQuizEndDay)
   const [days, hours, minutes, seconds] = getRemainingTime(answerQuizStartDay, answerQuizEndDay)
+
+  const handleStartClick = useCallback(async () => {
+    await startQuiz()
+    router.push("/quiz")
+  }, [router])
 
   // カウントダウン更新用
   const [, setDummy] = useState(0)
@@ -173,24 +182,23 @@ const TrackPage: NextPage = () => {
                   )}
                 </Box>
               )}
-              <NextLink href="/quiz" passHref={true}>
-                <Button
-                  w={60} h={16}
-                  fontSize="xl" fontWeight="bold" color="text.white"
-                  background={phase === "answering" ? "red.main" : "background.transparent"}
-                  isDisabled={phase === "learning" ? true : false}
-                  variant={phase === "answering" ? "invBox" : "box"}
-                >
-                  {phase === "answering" || phase === "finished" ? "Start" : (
-                    <>
-                      {days > 0 && <><Tnum number={days}/>&nbsp;{days === 1 ? "day" : "days"}&nbsp;·&nbsp;</>}
-                      {hours > 0 && <><Tnum number={hours} length={2}/>:</>}
-                      <Tnum number={minutes} length={2}/>:
-                      <Tnum number={seconds} length={2}/>
-                    </>
-                  )}
-                </Button>
-              </NextLink>
+              <Button
+                w={60} h={16}
+                fontSize="xl" fontWeight="bold" color="text.white"
+                background={phase === "answering" ? "red.main" : "background.transparent"}
+                isDisabled={phase === "learning" ? true : false}
+                variant={phase === "answering" ? "invBox" : "box"}
+                onClick={handleStartClick}
+              >
+                {phase === "answering" || phase === "finished" ? "Start" : (
+                  <>
+                    {days > 0 && <><Tnum number={days}/>&nbsp;{days === 1 ? "day" : "days"}&nbsp;·&nbsp;</>}
+                    {hours > 0 && <><Tnum number={hours} length={2}/>:</>}
+                    <Tnum number={minutes} length={2}/>:
+                    <Tnum number={seconds} length={2}/>
+                  </>
+                )}
+              </Button>
             </Box>
           </Flex>
         )}
