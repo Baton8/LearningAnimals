@@ -9,7 +9,7 @@ import {AnimalNFT} from "../contracts/AnimalNFT.sol";
 
 contract Track is Initializable {
 
-    address TokenAddress;
+    address TokenAddress = 0x91769c8fDDc589306ba16d0b367a26E035bF5bDA;
     AnimalNFT animal;
     IERC20 public lac = ERC20(TokenAddress);
 
@@ -78,11 +78,10 @@ contract Track is Initializable {
         answerTimes[msg.sender] = time;
 
         earnAmount[msg.sender] += quizEntryPrize;
-        lac.transfer(msg.sender, quizEntryPrize);
      }
 
-     function getPrizeForQuiz() public payable {
-         lac.transfer(msg.sender, quizWinPrize);
+     function withdraw() public payable {
+         lac.transfer(msg.sender, earnAmount[msg.sender]);
      }
 
      function getNFTofWinQuiz(uint _tokenId) public {
@@ -137,17 +136,16 @@ contract Track is Initializable {
     // VIEW FUNCTIONS
     //-------------------------------------------------------------------------
 
-     function getQuiz(uint _questionIndex) public view returns(string memory, string[] memory) {
+     function getSelectedQuizzes(uint _questionIndex) public view returns(string memory, string[] memory) {
         string memory question = quizs[_questionIndex].getQuestion();
         string[] memory choices = quizs[_questionIndex].getChoices();
         return (question, choices);
      }
 
-     function getSelectedQuizIndex() public view returns(uint[] memory) {
-        uint[] memory array;
-        return array;
+     function getQuizzes() public view returns(QuizNFT[] memory) {
+        return quizs;
      }
-
+    
      function checkQuizPrize() public view returns(bool) { 
         bool hasPrize = false;
         for(uint i = 0; i < quizWinners.length; i++) {

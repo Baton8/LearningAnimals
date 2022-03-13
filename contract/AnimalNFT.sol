@@ -18,6 +18,7 @@ contract AnimalNFT is ERC721 {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _truck[tokenId] = truckId;
+
         _safeMint(_sender, tokenId);
 
         return tokenId;

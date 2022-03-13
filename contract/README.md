@@ -1,1 +1,0 @@
-# LearningAnimals-Contract
