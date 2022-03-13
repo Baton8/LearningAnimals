@@ -129,20 +129,34 @@ const TrackPage: NextPage = () => {
         ) : (
           <Flex w="full" maxW="1200px" direction="column" align="center">
             <Flex w="full" justify="space-between" align="center">
-              <Box color="text.white" textShadow="overImage">
-                <Box fontSize="5xl" fontWeight="bold" lineHeight="shorter">
+              <Flex direction="column" align="flex-start">
+                <Box
+                  px={4}
+                  fontSize="5xl" fontWeight="bold"
+                  color={phase === "answering" ? "text.invTitle" : "text.title"}
+                  background="background.white"
+                  borderWidth="box" borderColor={phase === "answering" ? "text.invTitle" : "text.title"}
+                  rounded="md"
+                  lineHeight="shorter"
+                >
                   {title || "[Untitled Track]"}
                 </Box>
-                <Box mt={1} fontSize="2xl" fontWeight="bold">
+                <Box
+                  mt={2} px={4}
+                  fontSize="2xl" fontWeight="bold"
+                  color="text.white"
+                  background={phase === "answering" ? "text.invTitle" : "text.title"}
+                  rounded="md"
+                >
                   {answerQuizStartDay?.format("DD MMM YYYY · HH:mm")}–{answerQuizEndDay?.format("HH:mm")}
                 </Box>
-                <Box mt={4} fontSize="lg">
+                <Box mt={4} fontSize="lg" color="text.white" textShadow="overImage">
                    All participants will receive:{" "}
                    <Text fontWeight="bold" as="span">{quizEntryPrize?.toFixed(3)} LAC</Text><br/>
                    Winners will receive:{" "}
                    <Text fontWeight="bold" as="span">{quizWinPrize?.toFixed(3)} LAC</Text>
                 </Box>
-              </Box>
+              </Flex>
               <WhiteBox 
                 px={8} pb={6}
                 flexDirection="column" alignItems="center"
@@ -192,7 +206,7 @@ const TrackPage: NextPage = () => {
                 background={phase === "answering" ? "red.main" : "background.transparent"}
                 isDisabled={phase === "learning" ? true : false}
                 isLoading={isStartLoading}
-                variant={phase === "answering" ? "invBox" : "box"}
+                variant="invBox"
                 onClick={handleStartClick}
               >
                 {phase === "answering" || phase === "finished" ? "Start" : (
