@@ -19,8 +19,8 @@ import { AppContainer } from "src/components/appContainer";
 import { Tnum } from "src/components/tnum";
 
 
-// learning (記事投稿フェーズ), answering (クイズ解答フェーズ), finished (終了後)
-type TrackStatus = "learning" | "answering" | "finished"
+// none (トラック未開催), learning (記事投稿フェーズ), answering (クイズ解答フェーズ), finished (終了後)
+type TrackStatus = "none" | "learning" | "answering" | "finished"
 
 const getPhase = (quizStartDay: Dayjs | undefined, quizEndDay: Dayjs | undefined): TrackStatus => {
   if (quizStartDay != null && quizEndDay != null) {
@@ -30,7 +30,7 @@ const getPhase = (quizStartDay: Dayjs | undefined, quizEndDay: Dayjs | undefined
     } else if (now.isBefore(quizEndDay)) {
       return "answering"
     } else {
-      return "learning"
+      return "none"
     }
   } else {
     return "learning"
@@ -85,82 +85,107 @@ const TrackPage: NextPage = () => {
         direction="column" align="center"
         background="url('https://images.unsplash.com/photo-1620321023374-d1a68fbc720d')" backgroundSize="cover" backgroundPosition="center"
       >
-        <Flex w="full" maxW="1200px" direction="column" align="center">
-          <Flex w="full" justify="space-between" align="center">
-            <Box color="text.white" textShadow="overImage">
-              <Box fontSize="5xl" fontWeight="bold">
-                {title || "[Untitled Track]"}
+        {phase === "none" ? (
+          <Flex w="full" direction="column" align="center">
+            <Box color="text.white" textShadow="overImage" textAlign="center">
+              <Box fontSize="5xl" fontWeight="bold" lineHeight="shorter">
+                We are looking for a new quiz organizer!
               </Box>
-              <Box fontSize="2xl" fontWeight="bold">
-                {quizStartDay?.format("DD MMM YYYY · HH:mm")}–{quizEndDay?.format("HH:mm")}
-              </Box>
-              <Box mt={4}>
-                Attend to get: {quizEntryPrize} LAC
+              <Box mt={2} fontSize="lg">
+                Choose the topic for the next quiz competition as you like!
               </Box>
             </Box>
-            <WhiteBox 
-              px={8} pb={6}
-              flexDirection="column" alignItems="center"
-              background="background.transparent"
-              rounded="xl" variant="invertedBox"
-            >
-              <Flex
-                h={8} px={10} mt={-4} mb={4}
-                fontWeight="bold" color="text.black" background="background.white"
-                rounded="full"
-                align="center" justify="center"
-              >
-                Top 3
-              </Flex>
-              <Flex gap={4} align="center" color="text.white">
-                <Box textAlign="center">
-                  <Box>2nd</Box>
-                  <Image w={14} h={14} mt={1} rounded="full" src="http://via.placeholder.com/56x56" alt=""/>
-                </Box>
-                <Box textAlign="center">
-                  <Box fontSize="lg">1st</Box>
-                  <Image w={20} h={20} mt={1} rounded="full" src="http://via.placeholder.com/80x80" alt=""/>
-                </Box>
-                <Box textAlign="center">
-                  <Box>3rd</Box>
-                  <Image w={14} h={14} mt={1} rounded="full" src="http://via.placeholder.com/56x56" alt=""/>
-                </Box>
-              </Flex>
-            </WhiteBox>
+            <Box mt={10}>
+              <NextLink href="/track/create" passHref={true}>
+                <Button
+                  w={60} h={16}
+                  fontSize="xl" fontWeight="bold" color="text.white"
+                  background="background.transparent"
+                  variant="box"
+                >
+                  Create track
+                </Button>
+              </NextLink>
+            </Box>
           </Flex>
-          <Box mt={10}>
-            {phase !== "learning" && (
-              <Box mb={2} fontSize="xl" fontWeight="bold" color="text.white" textAlign="center">
-                {phase !== "answering" ? "This track is finished" : (
-                  <>
-                    {days > 0 && <><Tnum number={days}/>&nbsp;{days === 1 ? "day" : "days"}&nbsp;·&nbsp;</>}
-                    {hours > 0 && <><Tnum number={hours} length={2}/>:</>}
-                    <Tnum number={minutes} length={2}/>:
-                    <Tnum number={seconds} length={2}/>
-                  </>
-                )}
+        ) : (
+          <Flex w="full" maxW="1200px" direction="column" align="center">
+            <Flex w="full" justify="space-between" align="center">
+              <Box color="text.white" textShadow="overImage">
+                <Box fontSize="5xl" fontWeight="bold" lineHeight="shorter">
+                  {title || "[Untitled Track]"}
+                </Box>
+                <Box fontSize="2xl" fontWeight="bold">
+                  {quizStartDay?.format("DD MMM YYYY · HH:mm")}–{quizEndDay?.format("HH:mm")}
+                </Box>
+                <Box mt={4} fontSize="lg">
+                  Attend to get: {quizEntryPrize} LAC
+                </Box>
               </Box>
-            )}
-            <NextLink href="/quiz" passHref={true}>
-              <Button
-                w={60} h={16}
-                fontSize="xl" fontWeight="bold" color="text.white"
-                background={phase === "answering" ? "red.main" : "background.transparent"}
-                isDisabled={phase === "learning" ? true : false}
-                variant={phase === "answering" ? "invertedBox" : "box"}
+              <WhiteBox 
+                px={8} pb={6}
+                flexDirection="column" alignItems="center"
+                background="background.transparent"
+                rounded="xl" variant="invertedBox"
               >
-                {phase !== "learning" ? "Start" : (
-                  <>
-                    {days > 0 && <><Tnum number={days}/>&nbsp;{days === 1 ? "day" : "days"}&nbsp;·&nbsp;</>}
-                    {hours > 0 && <><Tnum number={hours} length={2}/>:</>}
-                    <Tnum number={minutes} length={2}/>:
-                    <Tnum number={seconds} length={2}/>
-                  </>
-                )}
-              </Button>
-            </NextLink>
-          </Box>
-        </Flex>
+                <Flex
+                  h={8} px={10} mt={-4} mb={4}
+                  fontWeight="bold" color="text.black" background="background.white"
+                  rounded="full"
+                  align="center" justify="center"
+                >
+                  Top 3
+                </Flex>
+                <Flex gap={4} align="center" color="text.white">
+                  <Box textAlign="center">
+                    <Box>2nd</Box>
+                    <Image w={14} h={14} mt={1} rounded="full" src="http://via.placeholder.com/56x56" alt=""/>
+                  </Box>
+                  <Box textAlign="center">
+                    <Box fontSize="lg">1st</Box>
+                    <Image w={20} h={20} mt={1} rounded="full" src="http://via.placeholder.com/80x80" alt=""/>
+                  </Box>
+                  <Box textAlign="center">
+                    <Box>3rd</Box>
+                    <Image w={14} h={14} mt={1} rounded="full" src="http://via.placeholder.com/56x56" alt=""/>
+                  </Box>
+                </Flex>
+              </WhiteBox>
+            </Flex>
+            <Box mt={10}>
+              {phase === "answering" || phase === "finished" && (
+                <Box mb={2} fontSize="xl" fontWeight="bold" color="text.white" textAlign="center">
+                  {phase === "finished" ? "This track is finished" : (
+                    <>
+                      {days > 0 && <><Tnum number={days}/>&nbsp;{days === 1 ? "day" : "days"}&nbsp;·&nbsp;</>}
+                      {hours > 0 && <><Tnum number={hours} length={2}/>:</>}
+                      <Tnum number={minutes} length={2}/>:
+                      <Tnum number={seconds} length={2}/>
+                    </>
+                  )}
+                </Box>
+              )}
+              <NextLink href="/quiz" passHref={true}>
+                <Button
+                  w={60} h={16}
+                  fontSize="xl" fontWeight="bold" color="text.white"
+                  background={phase === "answering" ? "red.main" : "background.transparent"}
+                  isDisabled={phase === "learning" ? true : false}
+                  variant={phase === "answering" ? "invertedBox" : "box"}
+                >
+                  {phase === "answering" || phase === "finished" ? "Start" : (
+                    <>
+                      {days > 0 && <><Tnum number={days}/>&nbsp;{days === 1 ? "day" : "days"}&nbsp;·&nbsp;</>}
+                      {hours > 0 && <><Tnum number={hours} length={2}/>:</>}
+                      <Tnum number={minutes} length={2}/>:
+                      <Tnum number={seconds} length={2}/>
+                    </>
+                  )}
+                </Button>
+              </NextLink>
+            </Box>
+          </Flex>
+        )}
       </Flex>
       <Box w="full" maxW="1200px">
         {phase === "learning" && (
@@ -205,49 +230,51 @@ const TrackPage: NextPage = () => {
             </Box>
           </Box>
         )}
-        <Box w="full" mt={12} color={phase === "answering" ? "text.white" : "text.black"}>
-          <Box>
-            <Text align="center" fontSize="2xl" fontWeight="bold">Quizzes</Text>
-            <Text mt={2} fontSize="sm" color={phase === "answering" ? "text.darkgray" : "text.gray"} align="center" lineHeight="shorter">
-              The following are all the quizzes that everyone put together.<br/>
-              Read them carefully as you will be asked from them!
-            </Text>
+        {phase !== "none" && (
+          <Box w="full" mt={12} color={phase === "answering" ? "text.white" : "text.black"}>
+            <Box>
+              <Text align="center" fontSize="2xl" fontWeight="bold">Quizzes</Text>
+              <Text mt={2} fontSize="sm" color={phase === "answering" ? "text.darkgray" : "text.gray"} align="center" lineHeight="shorter">
+                The following are all the quizzes that everyone put together.<br/>
+                Read them carefully as you will be asked from them!
+              </Text>
+            </Box>
+            <SimpleGrid mt={8} gap={4} w="full" templateColumns="repeat(2, 1fr)">
+              {(articles ?? []).map((article, index) => (
+                <GridItem key={index}>
+                  <WhiteBox
+                    w="full" h="full" px={4} py={4}
+                    whiteSpace="normal" textAlign="left"
+                    flexDirection="column" alignItems="flex-start" justifyContent="space-between"
+                    variant={phase === "answering" ? "invertedBox" : "box"}
+                  >
+                    <Box w="full">
+                      <Text w="full" fontWeight="bold">
+                        {article.title || "[No question]"}
+                      </Text>
+                      <SimpleGrid w="full" templateColumns="repeat(2, 1fr)" columnGap={4}>
+                        {["Choice 1", "Choice 2", "Choice 3", "Choice 4"].map((choice, index) => (
+                          <GridItem key={index} fontWeight={index === 1 ? "bold" : undefined} color={index === 1 ? "red.main" : undefined}>
+                            {choice}
+                          </GridItem>
+                        ))}
+                      </SimpleGrid>
+                    </Box>
+                    <Flex w="full" mt={2} fontWeight="bold" align="center" justify="flex-end">
+                      {article.favorites}
+                      <Icon
+                        w={5} h={5} ml={1}
+                        as={FaStar}
+                        color="star.off"
+                        sx={{"& path": {stroke: phase === "answering" ? "text.white" : "text.black", strokeWidth: 50}}}
+                      />
+                    </Flex>
+                  </WhiteBox>
+                </GridItem>
+              ))}
+            </SimpleGrid>
           </Box>
-          <SimpleGrid mt={8} gap={4} w="full" templateColumns="repeat(2, 1fr)">
-            {(articles ?? []).map((article, index) => (
-              <GridItem key={index}>
-                <WhiteBox
-                  w="full" h="full" px={4} py={4}
-                  whiteSpace="normal" textAlign="left"
-                  flexDirection="column" alignItems="flex-start" justifyContent="space-between"
-                  variant={phase === "answering" ? "invertedBox" : "box"}
-                >
-                  <Box w="full">
-                    <Text w="full" fontWeight="bold">
-                      {article.title || "[No question]"}
-                    </Text>
-                    <SimpleGrid w="full" templateColumns="repeat(2, 1fr)" columnGap={4}>
-                      {["Choice 1", "Choice 2", "Choice 3", "Choice 4"].map((choice, index) => (
-                        <GridItem key={index} fontWeight={index === 1 ? "bold" : undefined} color={index === 1 ? "red.main" : undefined}>
-                          {choice}
-                        </GridItem>
-                      ))}
-                    </SimpleGrid>
-                  </Box>
-                  <Flex w="full" mt={2} fontWeight="bold" align="center" justify="flex-end">
-                    {article.favorites}
-                    <Icon
-                      w={5} h={5} ml={1}
-                      as={FaStar}
-                      color="star.off"
-                      sx={{"& path": {stroke: phase === "answering" ? "text.white" : "text.black", strokeWidth: 50}}}
-                    />
-                  </Flex>
-                </WhiteBox>
-              </GridItem>
-            ))}
-          </SimpleGrid>
-        </Box>
+        )}
       </Box>
     </AppContainer>
   );

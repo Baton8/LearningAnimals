@@ -54,7 +54,7 @@ const CreateTrackPage: NextPage = () => {
           </FormControl>
           <Flex mt={6} direction="column" align="center">
             <Button w={48} color="text.white" background="red.main" variant="box" type="submit" isLoading={isLoading}>
-              Submit
+              Create
             </Button>
             <NextLink href="/" passHref={true}>
               <Link mt={4}>Back</Link>
