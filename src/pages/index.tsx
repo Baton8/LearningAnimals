@@ -17,6 +17,7 @@ import {
 import dayjs, { Dayjs } from "dayjs";
 import { AppContainer } from "src/components/appContainer";
 import { Tnum } from "src/components/tnum";
+import { QuizCreator } from "src/components/quizCreator";
 
 
 // none (トラック未開催), learning (記事投稿フェーズ), answering (クイズ解答フェーズ), finished (終了後)
@@ -30,7 +31,7 @@ const getPhase = (quizStartDay: Dayjs | undefined, quizEndDay: Dayjs | undefined
     } else if (now.isBefore(quizEndDay)) {
       return "answering"
     } else {
-      return "none"
+      return "learning"
     }
   } else {
     return "learning"
@@ -63,6 +64,8 @@ const TrackPage: NextPage = () => {
   const {data: quizEndDay} = useSWR("/track/fetchQuizEndDay", (url) => fetchQuizEndDay())
   const {data: articles} = useSWR("/track/fetchArticles", (url) => fetchArticles())
   const {data: quizzes} = useSWR("/track/fetchQuizzes", (url) => fetchQuizzes())
+
+  const [isQuizCreatorOpen, setIsQuizCreatorOpen] = useState(false)
 
   const phase = getPhase(quizStartDay, quizEndDay)
   const [days, hours, minutes, seconds] = getRemainingTime(quizStartDay, quizEndDay)
@@ -222,11 +225,9 @@ const TrackPage: NextPage = () => {
               </WhiteBox>
             </WhiteBox>
             <Box mt={6} textAlign="center">
-              <NextLink href="/quiz/create" passHref={true}>
-                <Button w={48} color="text.white" background="red.main" variant="box">
-                  Submit quiz
-                </Button>
-              </NextLink>
+              <Button w={48} color="text.white" background="red.main" variant="box" onClick={() => setIsQuizCreatorOpen(true)}>
+                Submit quiz
+              </Button>
             </Box>
           </Box>
         )}
@@ -276,6 +277,7 @@ const TrackPage: NextPage = () => {
           </Box>
         )}
       </Box>
+      <QuizCreator isOpen={isQuizCreatorOpen} onClose={() => setIsQuizCreatorOpen(false)}/>
     </AppContainer>
   );
 };
