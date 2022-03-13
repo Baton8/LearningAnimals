@@ -1,8 +1,7 @@
 import type { NextPage } from "next";
-import { useRouter } from "next/dist/client/router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { QuizPageAvantLayout, QuizPageFinishedLayout, QuizPageMainLayout } from "src/components/quizPageLayout";
-import { answerQuiz, fetchQuiz } from "src/repositories/track";
+import { answerQuiz, fetchSelectedQuiz } from "src/repositories/track";
 
 
 const QuizPage: NextPage = () => {
@@ -21,7 +20,7 @@ const QuizPage: NextPage = () => {
 
   useEffect(() => {
     const updateQuiz = async () => {
-      const {question, choices} = await fetchQuiz(quizIndex)
+      const {question, choices} = await fetchSelectedQuiz(quizIndex)
       setQuestion(question)
       setChoices(choices)
       setQuizReady(true)

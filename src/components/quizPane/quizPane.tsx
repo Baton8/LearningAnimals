@@ -2,7 +2,7 @@ import { Box, Button, Flex, Icon, Stack, Text } from "@chakra-ui/react"
 import { useState } from "react"
 import { FaStar } from "react-icons/fa"
 import type { TrackPhase } from "src/pages"
-import { Quiz } from "src/repositories/track"
+import { Quiz } from "src/repositories/quiz"
 
 
 type Props = {

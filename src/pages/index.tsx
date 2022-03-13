@@ -5,11 +5,10 @@ import { WhiteBox } from "src/components/whiteBox";
 import NextLink from "next/link";
 import useSWR from "swr";
 import {
-  fetchArticleEntryPrize,
-  fetchArticles,
-  fetchQuizEndDay,
+  fetchAnswerQuizEndDay,
+  fetchAnswerQuizStartDay,
   fetchQuizEntryPrize,
-  fetchQuizStartDay,
+  fetchQuizWinPrize,
   fetchQuizzes,
   fetchTitle
 } from "src/repositories/track";
@@ -24,25 +23,25 @@ import { TrackCreator } from "src/components/trackCreator";
 // none (トラック未開催), learning (記事投稿フェーズ), answering (クイズ解答フェーズ), finished (終了後)
 export type TrackPhase = "none" | "learning" | "answering" | "finished"
 
-const getPhase = (quizStartDay: Dayjs | undefined, quizEndDay: Dayjs | undefined): TrackPhase => {
-  if (quizStartDay != null && quizEndDay != null) {
+const getPhase = (startDay: Dayjs | undefined, endDay: Dayjs | undefined): TrackPhase => {
+  if (startDay != null && endDay != null) {
     const now = dayjs()
-    if (now.isBefore(quizStartDay)) {
+    if (now.isBefore(startDay)) {
       return "learning"
-    } else if (now.isBefore(quizEndDay)) {
+    } else if (now.isBefore(endDay)) {
       return "answering"
     } else {
-      return "finished"
+      return "learning"
     }
   } else {
     return "learning"
   }
 }
 
-const getRemainingTime = (quizStartDay: Dayjs | undefined, quizEndDay: Dayjs | undefined): [number, number, number, number] => {
-  if (quizStartDay != null && quizEndDay != null) {
+const getRemainingTime = (startDay: Dayjs | undefined, endDay: Dayjs | undefined): [number, number, number, number] => {
+  if (startDay != null && endDay != null) {
     const now = dayjs()
-    const refDay = now.isBefore(quizStartDay) ? quizStartDay : now.isBefore(quizEndDay) ? quizEndDay : null
+    const refDay = now.isBefore(startDay) ? startDay : now.isBefore(endDay) ? endDay : null
     if (refDay != null) {
       const days = refDay.diff(now, "day")
       const hours = refDay.diff(now, "hour") % 24
@@ -59,27 +58,19 @@ const getRemainingTime = (quizStartDay: Dayjs | undefined, quizEndDay: Dayjs | u
 
 const TrackPage: NextPage = () => {
   const {data: title} = useSWR("/track/fetchTitle", (url) => fetchTitle())
-  const {data: quizEntryPrize} = useSWR("/track/fetchQuizEntryPrize", (url) => fetchQuizEntryPrize())
-  const {data: articleEntryPrize} = useSWR("/track/fetchArticleEntryPrize", (url) => fetchArticleEntryPrize())
-  const {data: quizStartDay} = useSWR("/track/fetchQuizStartDay", (url) => fetchQuizStartDay())
-  const {data: quizEndDay} = useSWR("/track/fetchQuizEndDay", (url) => fetchQuizEndDay())
-  // const {data: quizzes} = useSWR("/track/fetchQuizzes", (url) => fetchQuizzes())
 
-  const quizzes = [
-    {question: "Djana il esperion brield dra froeidier, bea dingolea il esperion?", choices: ["A", "B", "C", "D"], correctIndex: 0},
-    {question: "Djana il esperion brield dra froeidier, bea dingolea il esperion?", choices: ["A", "B", "C", "D"], correctIndex: 0},
-    {question: "Djana il esperion brield dra froeidier, bea dingolea il esperion?", choices: ["A", "B", "C", "D"], correctIndex: 0},
-    {question: "Djana il esperion brield dra froeidier, bea dingolea il esperion?", choices: ["A", "B", "C", "D"], correctIndex: 0},
-    {question: "Djana il esperion brield dra froeidier, bea dingolea il esperion?", choices: ["A", "B", "C", "D"], correctIndex: 0},
-    {question: "Djana il esperion brield dra froeidier, bea dingolea il esperion?", choices: ["A", "B", "C", "D"], correctIndex: 0},
-    {question: "Djana il esperion brield dra froeidier, bea dingolea il esperion?", choices: ["A", "B", "C", "D"], correctIndex: 0},
-  ]
+  const {data: quizEntryPrize} = useSWR("/track/fetchQuizEntryPrize", (url) => fetchQuizEntryPrize())
+  const {data: quizWinPrize} = useSWR("/track/fetchQuizWinPrize", (url) => fetchQuizWinPrize())
+
+  const {data: answerQuizStartDay} = useSWR("/track/fetchQuizStartDay", (url) => fetchAnswerQuizStartDay())
+  const {data: answerQuizEndDay} = useSWR("/track/fetchQuizEndDay", (url) => fetchAnswerQuizEndDay())
+  const {data: quizzes} = useSWR("/track/fetchQuizzes", (url) => fetchQuizzes())
 
   const [isQuizCreatorOpen, setIsQuizCreatorOpen] = useState(false)
   const [isTrackCreatorOpen, setIsTrackCreatorOpen] = useState(false)
 
-  const phase = getPhase(quizStartDay, quizEndDay)
-  const [days, hours, minutes, seconds] = getRemainingTime(quizStartDay, quizEndDay)
+  const phase = getPhase(answerQuizStartDay, answerQuizEndDay)
+  const [days, hours, minutes, seconds] = getRemainingTime(answerQuizStartDay, answerQuizEndDay)
 
   // カウントダウン更新用
   const [, setDummy] = useState(0)
@@ -130,10 +121,11 @@ const TrackPage: NextPage = () => {
                   {title || "[Untitled Track]"}
                 </Box>
                 <Box fontSize="2xl" fontWeight="bold">
-                  {quizStartDay?.format("DD MMM YYYY · HH:mm")}–{quizEndDay?.format("HH:mm")}
+                  {answerQuizStartDay?.format("DD MMM YYYY · HH:mm")}–{answerQuizEndDay?.format("HH:mm")}
                 </Box>
                 <Box mt={4} fontSize="lg">
-                  Attend to get: {quizEntryPrize} LAC
+                   Whoever attends will receive: {quizEntryPrize} LAC<br/>
+                   Winners will receive: {quizWinPrize} LAC
                 </Box>
               </Box>
               <WhiteBox 
@@ -213,12 +205,12 @@ const TrackPage: NextPage = () => {
                   The five quizzes with the most bookmarks<br/>
                   will win the NFTs!
                 </Text>
-                <Text mt={2} color="text.gray">
+                {/* <Text mt={2} color="text.gray">
                   Whoever submits quizzes will receive:{" "}
                   <Text fontSize="xl" fontWeight="bold" color="green.main" as="span">
-                    {articleEntryPrize} LAC
+                    {0} LAC
                   </Text>
-                </Text>
+                </Text> */}
               </Box>
               <WhiteBox
                 px={8} pt={6} pb={6}
@@ -252,7 +244,7 @@ const TrackPage: NextPage = () => {
               </Text>
             </Box>
             <SimpleGrid mt={8} gap={6} w="full" templateColumns="repeat(4, 1fr)">
-              {quizzes.map((quiz, index) => (
+              {(quizzes ?? []).map((quiz, index) => (
                 <GridItem key={index}>
                   <QuizPane quiz={quiz} phase={phase}/>
                 </GridItem>

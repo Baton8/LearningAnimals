@@ -4,18 +4,7 @@ import { web3 } from "../web3";
 
 const ABI = [
 	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "symbol",
-				"type": "string"
-			}
-		],
+		"inputs": [],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
 	},
@@ -290,6 +279,6 @@ const ABI = [
 		"type": "function"
 	}
 ] as AbiItem[];
-const ADDRESS = "a6A35a53Aa607b593f18030D6beE9F34623484E3";
+const ADDRESS = "91769c8fDDc589306ba16d0b367a26E035bF5bDA";
 
 export const contract = new web3.eth.Contract(ABI, ADDRESS);

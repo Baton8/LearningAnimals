@@ -1,8 +1,7 @@
 import { useToast } from "@chakra-ui/react"
-import { useRouter } from "next/dist/client/router"
 import { BaseSyntheticEvent, useState } from "react"
 import { useForm, UseFormReturn } from "react-hook-form"
-import { createQuiz } from "src/repositories/track"
+import { createTrack } from "src/repositories/track"
 
 
 type FormValue = {
@@ -22,7 +21,6 @@ export const useCreateTrackForm = (): {
   }
   const [isLoading, setIsLoading] = useState(false)
 
-  const router = useRouter()
   const toast = useToast()
   const form = useForm<FormValue>({defaultValues: defaultValue})
   const {handleSubmit} = form
@@ -30,8 +28,7 @@ export const useCreateTrackForm = (): {
   const onValid = async (formValue: FormValue) => {
     setIsLoading(true)
     try {
-      console.log(formValue)
-      await null
+      await createTrack(formValue.title, formValue.description, formValue.prize)
       toast({title: "The track is successfully created", status: "success"})
     } catch (e) {
       console.error(e)
