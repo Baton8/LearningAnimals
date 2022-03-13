@@ -11,6 +11,11 @@ export const fetchTitle = async (): Promise<string> => {
   return result
 }
 
+export const fetchDescription = async (): Promise<string> => {
+  const result = await contract.methods.description().call()
+  return result
+}
+
 // クイズコンペティション参加者への支払額
 export const fetchQuizEntryPrize = async (): Promise<number> => {
   const prize = toDisplay(await contract.methods.quizEntryPrize().call())
@@ -125,31 +130,61 @@ export const createTestTrack = async (): Promise<void> => {
 // TODO: テスト用なので本番では使わないで
 export const createTestQuizzes = async (): Promise<void> => {
   const from = await getAccount()
-  await Promise.all(Array.from({length: 4}).map(async (dummy, index) => {
-    if (index === 0) {
-      await contract.methods.createQuiz(
-        "Which is the unabbreviated name of IPFS?",
-        ["InterPlanetary File System", "Internet File System", "InterPlanetary Folder System", "InterPlanetary Full System"],
-        0
-      ).send({from})
-    } else if (index === 1) {
-      await contract.methods.createQuiz(
-        "Which is the developer of IPFS?",
-        ["Ethereum", "Protocol Labs", "Bitcoin", "Alphabet"],
-        1
-      ).send({from})      
-    } else if (index === 2) {
-      await contract.methods.createQuiz(
-        "Which is the virtual currency used on IPFS that is given according to the time and amount of storage provided?",
-        ["Chainlink", "Ethereum", "Filecoin", "Bitcoin"],
-        2
-      ).send({from})  
-    } else {
-      await contract.methods.createQuiz(
-        "Which is the unabbreviated term for P2P?",
-        ["Pay to Pay", "Peer to Peer", "Person to Person", "Pot to Pot"],
-        1
-      ).send({from})  
-    }
-  }))
+  const promises = []
+  promises.push(contract.methods.createQuiz(
+    "Which is the unabbreviated name of IPFS?",
+    ["InterPlanetary File System", "Internet File System", "InterPlanetary Folder System", "InterPlanetary Full System"],
+    0
+  ).send({from}))
+  promises.push(contract.methods.createQuiz(
+    "Which is the developer of IPFS?",
+    ["Ethereum", "Protocol Labs", "Bitcoin", "Alphabet"],
+    1
+  ).send({from}))
+  promises.push(contract.methods.createQuiz(
+    "Which is the virtual currency used on IPFS that is given according to the time and amount of storage provided?",
+    ["Chainlink", "Ethereum", "Filecoin", "Bitcoin"],
+    2
+  ).send({from}))
+  promises.push(contract.methods.createQuiz(
+    "Which is the unabbreviated term for P2P?",
+    ["Pay to Pay", "Peer to Peer", "Person to Person", "Pot to Pot"],
+    1
+  ).send({from}))
+  promises.push(contract.methods.createQuiz(
+    "Who created Bitcoin?",
+    ["Satoshi Nakamoto", "Samsung", "John Mcafee", "Mark Zuckerberg"],
+    0
+  ).send({from}))
+  promises.push(contract.methods.createQuiz(
+    "Where do you store your cryptocurrency?",
+    ["Bank account", "Floppy disk", "Wallet", "In your pocket"],
+    2
+  ).send({from}))
+  promises.push(contract.methods.createQuiz(
+    "What is a blockchain?",
+    ["A distributed ledger on a peer to peer network", "A type of cryptocurrency", "An exchange", "A centralized ledger"],
+    0
+  ).send({from}))  
+  promises.push(contract.methods.createQuiz(
+    "What is a dApp?",
+    ["A type of cryptocurrency", "A condiment", "A type of blockchain", "A decentralized application"],
+    3
+  ).send({from}))  
+  promises.push(contract.methods.createQuiz(
+    "What is Proof of Stake?",
+    ["A certificate needed to use the blockchain", "A password needed to access an exchange", "How private keys are made", "A transaction and block verification protocol"],
+    3
+  ).send({from}))
+  promises.push(contract.methods.createQuiz(
+    "What is the name of the research paper that brought Bitcoin to the world?",
+    ["Black Paper", "White Paper", "Yellow Paper", "Green Paper"],
+    1
+  ).send({from}))
+  promises.push(contract.methods.createQuiz(
+    "What is Pinata?",
+    ["The simplest way to upload and manage files on IPFS", "A decentralized blockchain", "A decentralized finance platform", "A decentralized game"],
+    0
+  ).send({from}))
+  await Promise.all(promises)
 }

@@ -8,6 +8,7 @@ import {
   fetchAnswerQuizEndDay,
   fetchAnswerQuizStartDay,
   fetchDealtAnimalSpecs,
+  fetchDescription,
   fetchQuizEntryPrize,
   fetchQuizWinPrize,
   fetchQuizzes,
@@ -64,6 +65,7 @@ const TrackPage: NextPage = () => {
   const router = useRouter()
 
   const {data: title} = useSWR("/track/fetchTitle", (url) => fetchTitle())
+  const {data: description} = useSWR("/track/fetchDescription", (url) => fetchDescription())
 
   const {data: quizEntryPrize} = useSWR("/track/fetchQuizEntryPrize", (url) => fetchQuizEntryPrize())
   const {data: quizWinPrize} = useSWR("/track/fetchQuizWinPrize", (url) => fetchQuizWinPrize())
@@ -153,7 +155,10 @@ const TrackPage: NextPage = () => {
                 >
                   {answerQuizStartDay?.format("DD MMM YYYY · HH:mm")} –
                 </Box>
-                <Box mt={4} fontSize="lg" color="text.white" textShadow="overImage">
+                <Box mt={4} fontSize="lg" color="text.white" textShadow="overImage" lineHeight="shorter" whiteSpace="pre-wrap">
+                  {description}
+                </Box>
+                <Box mt={4} color="text.white" textShadow="overImage">
                    All participants will receive:{" "}
                    <Text fontWeight="bold" as="span">{formatNumber(quizEntryPrize, 3)} LAC</Text><br/>
                    Winners will receive:{" "}
