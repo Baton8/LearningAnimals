@@ -175,15 +175,15 @@ const TrackPage: NextPage = () => {
                 <Flex gap={4} align="center" color="text.white">
                   <Box textAlign="center">
                     <Box>2nd</Box>
-                    <Image w={14} h={14} mt={1} rounded="full" src="https://gateway.pinata.cloud/ipfs/QmeihkRyb434w8ULNzL7p1vRmFRMcXqwSPD2tpmz4u3cun/0_1.png" alt=""/>
+                    <Image w={14} h={14} mt={1} src="https://gateway.pinata.cloud/ipfs/QmeihkRyb434w8ULNzL7p1vRmFRMcXqwSPD2tpmz4u3cun/0_1.png" alt=""/>
                   </Box>
                   <Box textAlign="center">
                     <Box fontSize="lg">1st</Box>
-                    <Image w={20} h={20} mt={1} rounded="full" src="https://gateway.pinata.cloud/ipfs/QmeihkRyb434w8ULNzL7p1vRmFRMcXqwSPD2tpmz4u3cun/0_0.png" alt=""/>
+                    <Image w={20} h={20} mt={1} src="https://gateway.pinata.cloud/ipfs/QmeihkRyb434w8ULNzL7p1vRmFRMcXqwSPD2tpmz4u3cun/0_0.png" alt=""/>
                   </Box>
                   <Box textAlign="center">
                     <Box>3rd</Box>
-                    <Image w={14} h={14} mt={1} rounded="full" src="https://gateway.pinata.cloud/ipfs/QmeihkRyb434w8ULNzL7p1vRmFRMcXqwSPD2tpmz4u3cun/0_2.png" alt=""/>
+                    <Image w={14} h={14} mt={1} src="https://gateway.pinata.cloud/ipfs/QmeihkRyb434w8ULNzL7p1vRmFRMcXqwSPD2tpmz4u3cun/0_2.png" alt=""/>
                   </Box>
                 </Flex>
               </WhiteBox>
@@ -252,7 +252,7 @@ const TrackPage: NextPage = () => {
                 <Flex gap={4} align="center" color="text.white">
                   <Box textAlign="center">
                     <Box fontSize="lg">Top 5</Box>
-                    <Image w={20} h={20} mt={1} rounded="full" src="https://gateway.pinata.cloud/ipfs/QmeihkRyb434w8ULNzL7p1vRmFRMcXqwSPD2tpmz4u3cun/0_quiz.png" alt=""/>
+                    <Image w={20} h={20} mt={1} src="https://gateway.pinata.cloud/ipfs/QmeihkRyb434w8ULNzL7p1vRmFRMcXqwSPD2tpmz4u3cun/0_quiz.png" alt=""/>
                   </Box>
                 </Flex>
               </WhiteBox>
