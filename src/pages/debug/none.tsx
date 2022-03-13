@@ -28,18 +28,7 @@ import { formatNumber } from "src/utils/formatNumber";
 export type TrackPhase = "none" | "learning" | "answering" | "finished"
 
 const getPhase = (startDay: Dayjs | undefined, endDay: Dayjs | undefined): TrackPhase => {
-  if (startDay != null && endDay != null) {
-    const now = dayjs()
-    if (now.isBefore(startDay)) {
-      return "learning"
-    } else if (now.isBefore(endDay)) {
-      return "answering"
-    } else {
-      return "finished"
-    }
-  } else {
-    return "none"
-  }
+  return "none"
 }
 
 const getRemainingTime = (startDay: Dayjs | undefined, endDay: Dayjs | undefined): [number, number, number, number] => {
