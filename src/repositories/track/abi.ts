@@ -84,14 +84,38 @@ const ABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
 				"internalType": "uint256",
-				"name": "_tokenId",
+				"name": "",
 				"type": "uint256"
 			}
 		],
-		"name": "getNFTofWinQuiz",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"name": "earnNftTokenIdsOf",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "earnNfts",
+		"outputs": [
+			{
+				"internalType": "string[]",
+				"name": "",
+				"type": "string[]"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -152,6 +176,25 @@ const ABI = [
 				"internalType": "contract IERC20",
 				"name": "",
 				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "prizeNftIds",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -273,25 +316,6 @@ const ABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "selectedQuizzes",
-		"outputs": [
-			{
-				"internalType": "contract QuizNFT",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "startQuiz",
 		"outputs": [],
@@ -313,12 +337,19 @@ const ABI = [
 	},
 	{
 		"inputs": [],
+		"name": "transferNft",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "withdraw",
 		"outputs": [],
 		"stateMutability": "payable",
 		"type": "function"
 	}
 ] as AbiItem[];
-const ADDRESS = "5951d4180A9683bB83d21cD179867533f3940312";
+const ADDRESS = "B3489d98D1e2533714c90dF8500166e674E58aF0";
 
 export const contract = new web3.eth.Contract(ABI, ADDRESS);

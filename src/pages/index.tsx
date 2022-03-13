@@ -7,6 +7,7 @@ import useSWR from "swr";
 import {
   fetchAnswerQuizEndDay,
   fetchAnswerQuizStartDay,
+  fetchDealtAnimalSpecs,
   fetchQuizEntryPrize,
   fetchQuizWinPrize,
   fetchQuizzes,
@@ -70,6 +71,7 @@ const TrackPage: NextPage = () => {
   const {data: answerQuizStartDay} = useSWR("/track/fetchQuizStartDay", (url) => fetchAnswerQuizStartDay())
   const {data: answerQuizEndDay} = useSWR("/track/fetchQuizEndDay", (url) => fetchAnswerQuizEndDay())
   const {data: quizzes} = useSWR("/track/fetchQuizzes", (url) => fetchQuizzes())
+  const {data: dealtAnimalSpecs} = useSWR("/track/fetchDealtAnimalSpecs", (url) => fetchDealtAnimalSpecs())
 
   const [isQuizCreatorOpen, setIsQuizCreatorOpen] = useState(false)
   const [isTrackCreatorOpen, setIsTrackCreatorOpen] = useState(false)
@@ -175,15 +177,15 @@ const TrackPage: NextPage = () => {
                 <Flex gap={4} align="center" color="text.white">
                   <Box textAlign="center">
                     <Box>2nd</Box>
-                    <Image w={14} h={14} mt={1} src="https://gateway.pinata.cloud/ipfs/QmeihkRyb434w8ULNzL7p1vRmFRMcXqwSPD2tpmz4u3cun/0_1.png" alt=""/>
+                    <Image w={14} h={14} mt={1} src={dealtAnimalSpecs?.[1]?.image} alt=""/>
                   </Box>
                   <Box textAlign="center">
                     <Box fontSize="lg">1st</Box>
-                    <Image w={20} h={20} mt={1} src="https://gateway.pinata.cloud/ipfs/QmeihkRyb434w8ULNzL7p1vRmFRMcXqwSPD2tpmz4u3cun/0_0.png" alt=""/>
+                    <Image w={20} h={20} mt={1} src={dealtAnimalSpecs?.[0]?.image} alt=""/>
                   </Box>
                   <Box textAlign="center">
                     <Box>3rd</Box>
-                    <Image w={14} h={14} mt={1} src="https://gateway.pinata.cloud/ipfs/QmeihkRyb434w8ULNzL7p1vRmFRMcXqwSPD2tpmz4u3cun/0_2.png" alt=""/>
+                    <Image w={14} h={14} mt={1} src={dealtAnimalSpecs?.[2]?.image} alt=""/>
                   </Box>
                 </Flex>
               </WhiteBox>
@@ -235,12 +237,6 @@ const TrackPage: NextPage = () => {
                   The five quizzes with the most bookmarks<br/>
                   will win the NFTs!
                 </Text>
-                {/* <Text mt={2} color="text.gray">
-                  Whoever submits quizzes will receive:{" "}
-                  <Text fontSize="xl" fontWeight="bold" color="green.main" as="span">
-                    {0} LAC
-                  </Text>
-                </Text> */}
               </Box>
               <WhiteBox
                 px={8} pt={6} pb={6}
@@ -252,7 +248,7 @@ const TrackPage: NextPage = () => {
                 <Flex gap={4} align="center" color="text.white">
                   <Box textAlign="center">
                     <Box fontSize="lg">Top 5</Box>
-                    <Image w={20} h={20} mt={1} src="https://gateway.pinata.cloud/ipfs/QmeihkRyb434w8ULNzL7p1vRmFRMcXqwSPD2tpmz4u3cun/0_quiz.png" alt=""/>
+                    <Image w={20} h={20} mt={1} src={dealtAnimalSpecs?.[3]?.image} alt=""/>
                   </Box>
                 </Flex>
               </WhiteBox>
