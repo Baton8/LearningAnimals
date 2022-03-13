@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -13,6 +14,7 @@ import { WhiteBox } from "src/components/whiteBox";
 import useSWR from "swr";
 import { fetchBalance } from "src/repositories/token";
 import { useRouter } from "next/dist/client/router";
+import { withdraw } from "src/repositories/track";
 
 
 const UserPage: NextPage = () => {
@@ -64,6 +66,11 @@ const UserPage: NextPage = () => {
               {balance} LAC
             </Box>
           </WhiteBox>
+          <Box mt={4}>
+            <Button w={48} color="text.white" background="green.main" variant="box" onClick={() => withdraw()}>
+              Withdraw prizes  
+            </Button>
+          </Box>
         </Box>
       </Box>
     </AppContainer>

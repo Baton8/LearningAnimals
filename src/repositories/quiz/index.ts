@@ -8,7 +8,7 @@ export type Quiz = {
   choices: string[],
   correctIndex: number,
 }
-const dummyQuestion = "Abji ifeoaho iegh ei aojfe afjoeifj fh rhuao ghoav, si dhgra hugigraih gua uhfea. Shrg, e feu auefaj haufea rh huifarhi?"
+const dummyQuestion = "This is a dummy question which has no meaning at first glance, but in fact, this has a hidden meaning that changes the world."
 
 export const fetchQuiz = async (address: string): Promise<Quiz> => {
   const contract = getContract(address)

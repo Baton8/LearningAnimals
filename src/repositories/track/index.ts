@@ -1,5 +1,6 @@
 import dayjs, { Dayjs } from "dayjs"
 import { fetchQuiz, Quiz } from "../quiz"
+import { toDisplay, toInternal } from "../token"
 import { getAccount } from "../web3"
 import { contract } from "./abi"
 
@@ -10,14 +11,14 @@ export const fetchTitle = async (): Promise<string> => {
 }
 
 // クイズコンペティション参加者への支払額
-export const fetchQuizEntryPrize = async (): Promise<string> => {
-  const result = await contract.methods.quizEntryPrize().call()
-  return result
+export const fetchQuizEntryPrize = async (): Promise<number> => {
+  const prize = toDisplay(await contract.methods.quizEntryPrize().call())
+  return prize
 }
 
 // クイズコンペティション上位者への支払額
-export const fetchQuizWinPrize = async (): Promise<string> => {
-  const prize = await contract.methods.quizWinPrize().call()
+export const fetchQuizWinPrize = async (): Promise<number> => {
+  const prize = toDisplay(await contract.methods.quizWinPrize().call())
   return prize
 }
 
@@ -76,7 +77,13 @@ export const createQuiz = async (question: string, choices: string[], correctInd
 }
 
 export const createTrack = async (title: string, description: string, prize: number): Promise<void> => {
-  console.log("createTrack/request", {title, description, prize})
+  const internalPrize = toInternal(prize)
+  console.log("createTrack/request", {title, description, internalPrize})
   const from = await getAccount()
   await contract.methods.initialize(title, description).send({from})
+}
+
+export const withdraw = async (): Promise<void> => {
+  const from = await getAccount()
+  await contract.methods.withdraw().send({from})
 }
