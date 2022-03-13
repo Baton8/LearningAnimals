@@ -197,7 +197,7 @@ const TrackPage: NextPage = () => {
       </Flex>
       <Box w="full" maxW="1200px">
         {phase === "learning" && (
-          <Box w="full" maxW="1000px" mt={12} mx="auto" color="text.black">
+          <Box w="full" maxW="800px" mt={12} mx="auto" color="text.black">
             <Box>
               <Text align="center" fontSize="2xl" fontWeight="bold">It&apos;s time to study</Text>
             </Box>
