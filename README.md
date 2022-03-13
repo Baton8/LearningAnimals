@@ -1,4 +1,4 @@
-# LearningAnimals
+# Learning Animals
 
 ![LA-37](https://user-images.githubusercontent.com/7918776/158055478-c91c1851-f1ef-4a38-af23-adcd85a46714.png)
 
@@ -6,7 +6,8 @@ http://learninganimals.io/
 
 ## About
 
-LearningAnimals is a quiz-themed web3 application. It is a place where you can learn and earn by playing  quiz.
+Learning Animals is a quiz-themed web3 application.
+It is a place where you can learn and earn by playing quizzes.
 
 The quiz theme can be freely decided by the quiz organizer.
 The competition will be opened with a selection of user-generated quizzes.
@@ -16,7 +17,7 @@ NFTs will be given out to the winner of the quiz competition and to those who ma
 
 ## Token
 
-LearningAnimals allows the users to earn $LAC (Learning Animal Coins) by playing and learning.
+Learning Animals allows the users to earn $LAC (Learning Animal Coins) by playing and learning.
 The ways to earn tokens are as follows:
 
 1. Play quizzes

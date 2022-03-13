@@ -11,6 +11,9 @@ export const colors: Colors = {
 
     lightgray: "hsl(227, 15%, 85%)",
     invLightgray: "hsl(227, 20%, 45%)",
+
+    title: "#006D6D",
+    invTitle: "#070726",
   },
 
   background: {
@@ -22,7 +25,7 @@ export const colors: Colors = {
 
     main: "hsl(0, 0%, 95%)",
     
-    transparent: "#00000088",
+    transparent: "#000000AA",
     blue: {
       start: "#04002F",
       end: "#5400A8",

@@ -46,6 +46,12 @@ export const fetchAnswerQuizEndDay = async (): Promise<Dayjs> => {
   return day
 }
 
+export const fetchEarnAmount = async (): Promise<number> => {
+  const from = await getAccount()
+  const amount = toDisplay(await contract.methods.earnAmountOf(from).call())
+  return amount
+}
+
 // 投稿された全てのクイズ
 export const fetchQuizzes = async (): Promise<Quiz[]> => {
   const addresses = await contract.methods.getQuizzes().call() as string[]
@@ -64,6 +70,13 @@ export const fetchSelectedQuiz = async (index: number): Promise<Omit<Quiz, "corr
   return quiz
 }
 
+// クイズコンペティションに参加するときに呼ぶ
+// TODO: これは暫定的な方法です
+export const startQuiz = async (): Promise<void> => {
+  const from = await getAccount()
+  await contract.methods.startQuiz().send({from})
+}
+
 export const answerQuiz = async (choiceIndices: number[], time: number): Promise<void> => {
   console.log("answerQuiz/request", {choiceIndices, time})
   const from = await getAccount()
@@ -80,10 +93,24 @@ export const createTrack = async (title: string, description: string, prize: num
   const internalPrize = toInternal(prize)
   console.log("createTrack/request", {title, description, internalPrize})
   const from = await getAccount()
-  await contract.methods.initialize(title, description).send({from})
+  await contract.methods.restartTrack(title, description).send({from})
 }
 
 export const withdraw = async (): Promise<void> => {
   const from = await getAccount()
   await contract.methods.withdraw().send({from})
+}
+
+// TODO: テスト用なので本番では使わないで
+export const createTestTrack = async (): Promise<void> => {
+  const from = await getAccount()
+  await contract.methods.restartTrack("Test Track", "Description").send({from})
+}
+
+// TODO: テスト用なので本番では使わないで
+export const createTestQuizzes = async (): Promise<void> => {
+  const from = await getAccount()
+  await Promise.all(Array.from({length: 5}).map(async () => {
+    await contract.methods.createQuiz("Test question", ["Correct", "Wrong 1", "Wrong 2", "Wrong 3"], 0).send({from})
+  }))
 }

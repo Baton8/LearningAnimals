@@ -1,6 +1,6 @@
 import { Box, Button, Flex, GridItem, Icon, Image, SimpleGrid, Text } from "@chakra-ui/react";
 import type { NextPage } from "next";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { WhiteBox } from "src/components/whiteBox";
 import NextLink from "next/link";
 import useSWR from "swr";
@@ -10,7 +10,8 @@ import {
   fetchQuizEntryPrize,
   fetchQuizWinPrize,
   fetchQuizzes,
-  fetchTitle
+  fetchTitle,
+  startQuiz
 } from "src/repositories/track";
 import dayjs, { Dayjs } from "dayjs";
 import { AppContainer } from "src/components/appContainer";
@@ -18,6 +19,8 @@ import { Tnum } from "src/components/tnum";
 import { QuizCreator } from "src/components/quizCreator";
 import { QuizPane } from "src/components/quizPane";
 import { TrackCreator } from "src/components/trackCreator";
+import { useRouter } from "next/dist/client/router";
+import { formatNumber } from "src/utils/formatNumber";
 
 
 // none (トラック未開催), learning (記事投稿フェーズ), answering (クイズ解答フェーズ), finished (終了後)
@@ -31,10 +34,10 @@ const getPhase = (startDay: Dayjs | undefined, endDay: Dayjs | undefined): Track
     } else if (now.isBefore(endDay)) {
       return "answering"
     } else {
-      return "learning"
+      return "finished"
     }
   } else {
-    return "learning"
+    return "none"
   }
 }
 
@@ -57,6 +60,8 @@ const getRemainingTime = (startDay: Dayjs | undefined, endDay: Dayjs | undefined
 }
 
 const TrackPage: NextPage = () => {
+  const router = useRouter()
+
   const {data: title} = useSWR("/track/fetchTitle", (url) => fetchTitle())
 
   const {data: quizEntryPrize} = useSWR("/track/fetchQuizEntryPrize", (url) => fetchQuizEntryPrize())
@@ -68,9 +73,17 @@ const TrackPage: NextPage = () => {
 
   const [isQuizCreatorOpen, setIsQuizCreatorOpen] = useState(false)
   const [isTrackCreatorOpen, setIsTrackCreatorOpen] = useState(false)
+  const [isStartLoading, setIsStartLoading] = useState(false)
 
   const phase = getPhase(answerQuizStartDay, answerQuizEndDay)
   const [days, hours, minutes, seconds] = getRemainingTime(answerQuizStartDay, answerQuizEndDay)
+
+  const handleStartClick = useCallback(async () => {
+    setIsStartLoading(true)
+    await startQuiz()
+    setIsStartLoading(false)
+    router.push("/quiz")
+  }, [router])
 
   // カウントダウン更新用
   const [, setDummy] = useState(0)
@@ -89,7 +102,8 @@ const TrackPage: NextPage = () => {
       <Flex
         alignSelf="stretch" mx={-24} px={24} mt={-32} pt={40} pb={12}
         direction="column" align="center"
-        background="url('https://images.unsplash.com/photo-1620321023374-d1a68fbc720d')" backgroundSize="cover" backgroundPosition="center"
+        background={phase === "answering" ? "url('/track_background_inv.png')" : "url('/track_background.png')"}
+        backgroundSize="cover" backgroundPosition="center"
       >
         {phase === "none" ? (
           <Flex w="full" direction="column" align="center">
@@ -116,20 +130,34 @@ const TrackPage: NextPage = () => {
         ) : (
           <Flex w="full" maxW="1200px" direction="column" align="center">
             <Flex w="full" justify="space-between" align="center">
-              <Box color="text.white" textShadow="overImage">
-                <Box fontSize="5xl" fontWeight="bold" lineHeight="shorter">
+              <Flex direction="column" align="flex-start">
+                <Box
+                  px={4}
+                  fontSize="5xl" fontWeight="bold"
+                  color={phase === "answering" ? "text.invTitle" : "text.title"}
+                  background="background.white"
+                  borderWidth="box" borderColor={phase === "answering" ? "text.invTitle" : "text.title"}
+                  rounded="md"
+                  lineHeight="shorter"
+                >
                   {title || "[Untitled Track]"}
                 </Box>
-                <Box fontSize="2xl" fontWeight="bold">
+                <Box
+                  mt={3} px={4}
+                  fontSize="2xl" fontWeight="bold"
+                  color="text.white"
+                  background={phase === "answering" ? "text.invTitle" : "text.title"}
+                  rounded="md"
+                >
                   {answerQuizStartDay?.format("DD MMM YYYY · HH:mm")}–{answerQuizEndDay?.format("HH:mm")}
                 </Box>
-                <Box mt={4} fontSize="lg">
+                <Box mt={4} fontSize="lg" color="text.white" textShadow="overImage">
                    All participants will receive:{" "}
-                   <Text fontWeight="bold" as="span">{quizEntryPrize?.toFixed(3)} LAC</Text><br/>
+                   <Text fontWeight="bold" as="span">{formatNumber(quizEntryPrize, 3)} LAC</Text><br/>
                    Winners will receive:{" "}
-                   <Text fontWeight="bold" as="span">{quizWinPrize?.toFixed(3)} LAC</Text>
+                   <Text fontWeight="bold" as="span">{formatNumber(quizWinPrize, 3)} LAC</Text>
                 </Box>
-              </Box>
+              </Flex>
               <WhiteBox 
                 px={8} pb={6}
                 flexDirection="column" alignItems="center"
@@ -147,22 +175,22 @@ const TrackPage: NextPage = () => {
                 <Flex gap={4} align="center" color="text.white">
                   <Box textAlign="center">
                     <Box>2nd</Box>
-                    <Image w={14} h={14} mt={1} rounded="full" src="http://via.placeholder.com/56x56" alt=""/>
+                    <Image w={14} h={14} mt={1} src="https://gateway.pinata.cloud/ipfs/QmeihkRyb434w8ULNzL7p1vRmFRMcXqwSPD2tpmz4u3cun/0_1.png" alt=""/>
                   </Box>
                   <Box textAlign="center">
                     <Box fontSize="lg">1st</Box>
-                    <Image w={20} h={20} mt={1} rounded="full" src="http://via.placeholder.com/80x80" alt=""/>
+                    <Image w={20} h={20} mt={1} src="https://gateway.pinata.cloud/ipfs/QmeihkRyb434w8ULNzL7p1vRmFRMcXqwSPD2tpmz4u3cun/0_0.png" alt=""/>
                   </Box>
                   <Box textAlign="center">
                     <Box>3rd</Box>
-                    <Image w={14} h={14} mt={1} rounded="full" src="http://via.placeholder.com/56x56" alt=""/>
+                    <Image w={14} h={14} mt={1} src="https://gateway.pinata.cloud/ipfs/QmeihkRyb434w8ULNzL7p1vRmFRMcXqwSPD2tpmz4u3cun/0_2.png" alt=""/>
                   </Box>
                 </Flex>
               </WhiteBox>
             </Flex>
             <Box mt={10}>
               {phase === "answering" || phase === "finished" && (
-                <Box mb={2} fontSize="xl" fontWeight="bold" color="text.white" textAlign="center">
+                <Box mb={2} fontSize="xl" fontWeight="bold" color="text.white" textShadow="overImage" textAlign="center">
                   {phase === "finished" ? "This track is finished" : (
                     <>
                       {days > 0 && <><Tnum number={days}/>&nbsp;{days === 1 ? "day" : "days"}&nbsp;·&nbsp;</>}
@@ -173,24 +201,24 @@ const TrackPage: NextPage = () => {
                   )}
                 </Box>
               )}
-              <NextLink href="/quiz" passHref={true}>
-                <Button
-                  w={60} h={16}
-                  fontSize="xl" fontWeight="bold" color="text.white"
-                  background={phase === "answering" ? "red.main" : "background.transparent"}
-                  isDisabled={phase === "learning" ? true : false}
-                  variant={phase === "answering" ? "invBox" : "box"}
-                >
-                  {phase === "answering" || phase === "finished" ? "Start" : (
-                    <>
-                      {days > 0 && <><Tnum number={days}/>&nbsp;{days === 1 ? "day" : "days"}&nbsp;·&nbsp;</>}
-                      {hours > 0 && <><Tnum number={hours} length={2}/>:</>}
-                      <Tnum number={minutes} length={2}/>:
-                      <Tnum number={seconds} length={2}/>
-                    </>
-                  )}
-                </Button>
-              </NextLink>
+              <Button
+                w={60} h={16}
+                fontSize="xl" fontWeight="bold" color="text.white"
+                background={phase === "answering" ? "red.main" : "background.transparent"}
+                isDisabled={phase === "learning" ? true : false}
+                isLoading={isStartLoading}
+                variant="invBox"
+                onClick={handleStartClick}
+              >
+                {phase === "answering" || phase === "finished" ? "Start" : (
+                  <>
+                    {days > 0 && <><Tnum number={days}/>&nbsp;{days === 1 ? "day" : "days"}&nbsp;·&nbsp;</>}
+                    {hours > 0 && <><Tnum number={hours} length={2}/>:</>}
+                    <Tnum number={minutes} length={2}/>:
+                    <Tnum number={seconds} length={2}/>
+                  </>
+                )}
+              </Button>
             </Box>
           </Flex>
         )}
@@ -224,7 +252,7 @@ const TrackPage: NextPage = () => {
                 <Flex gap={4} align="center" color="text.white">
                   <Box textAlign="center">
                     <Box fontSize="lg">Top 5</Box>
-                    <Image w={20} h={20} mt={1} rounded="full" src="http://via.placeholder.com/80x80" alt=""/>
+                    <Image w={20} h={20} mt={1} src="https://gateway.pinata.cloud/ipfs/QmeihkRyb434w8ULNzL7p1vRmFRMcXqwSPD2tpmz4u3cun/0_quiz.png" alt=""/>
                   </Box>
                 </Flex>
               </WhiteBox>
