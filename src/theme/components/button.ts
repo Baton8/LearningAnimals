@@ -1,9 +1,9 @@
-import { ComponentStyleConfig } from "@chakra-ui/react"
+import { background, ComponentStyleConfig } from "@chakra-ui/react"
 
 
 const button: ComponentStyleConfig = {
   variants: {
-    box: {
+    box: (props) => ({
       h: 12,
       fontWeight: "normal",
       color: "text.black",
@@ -18,17 +18,27 @@ const button: ComponentStyleConfig = {
       _hover: {
         boxShadow: "0rem 0rem black",
         top: "0.25rem",
+        _disabled: {
+          background: props.background,
+        },
       },
       _active: {
         boxShadow: "0rem 0rem black",
         top: "0.25rem",
+        _disabled: {
+          background: props.background,
+        },        
       },
       _focus: {
-        boxShadow: "0rem 0rem black",
-        top: "0.25rem",
-      }
-    },
-    invertedBox: {
+        boxShadow: "0rem 0.25rem black",
+        top: "0rem",             
+      },
+      _disabled: {
+        opacity: 1,
+        boxShadow: "0rem 0.25rem black",
+      },
+    }),
+    invertedBox: (props) => ({
       h: 12,
       fontWeight: "normal",
       color: "text.white",
@@ -43,16 +53,26 @@ const button: ComponentStyleConfig = {
       _hover: {
         boxShadow: "0rem 0rem white",
         top: "0.25rem",
+        _disabled: {
+          background: props.background,
+        },
       },
       _active: {
         boxShadow: "0rem 0rem white",
         top: "0.25rem",
+        _disabled: {
+          background: props.background,
+        },            
       },
       _focus: {
-        boxShadow: "0rem 0rem white",
-        top: "0.25rem",
-      }
-    }
+        boxShadow: "0rem 0.25rem white",
+        top: "0rem",             
+      },
+      _disabled: {
+        opacity: 1,
+        boxShadow: "0rem 0.25rem white",
+      },
+    }),
   },
   defaultProps: {
     colorScheme: "primary"

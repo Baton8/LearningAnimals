@@ -30,7 +30,7 @@ const getStatus = (quizStartDay: Dayjs | undefined, quizEndDay: Dayjs | undefine
     } else if (now.isBefore(quizEndDay)) {
       return "open"
     } else {
-      return "learning"
+      return "open"
     }
   } else {
     return "learning"
@@ -197,7 +197,9 @@ const TrackPage: NextPage = () => {
             </WhiteBox>
             <Box mt={6} textAlign="center">
               <NextLink href="/quiz/create" passHref={true}>
-                <Button w={48} color="text.white" background="red.main" variant="box">Submit quiz</Button>
+                <Button w={48} color="text.white" background="red.main" variant="box">
+                  Submit quiz
+                </Button>
               </NextLink>
             </Box>
           </Box>
