@@ -125,7 +125,7 @@ export const createTestTrack = async (): Promise<void> => {
 // TODO: テスト用なので本番では使わないで
 export const createTestQuizzes = async (): Promise<void> => {
   const from = await getAccount()
-  await Promise.all(Array.from({length: 5}).map(async (dummy, index) => {
+  await Promise.all(Array.from({length: 4}).map(async (dummy, index) => {
     if (index === 0) {
       await contract.methods.createQuiz(
         "Which is the unabbreviated name of IPFS?",

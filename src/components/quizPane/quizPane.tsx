@@ -25,26 +25,28 @@ export const QuizPane: React.FC<Props> = ({
       onClick={() => setShowAnswer((answer) => !answer)}
     >
       <Box w="full">
-        <Text fontWeight="bold" lineHeight="shorter">
-          {quiz.question || "[Question text unspecified]"}
-        </Text>
-      </Box>
-      <Stack mt={2} spacing={1}>
-        {quiz.choices.map((choice, index) => (
-          <Text
-            key={index}
-            lineHeight="shorter"
-            fontWeight={showAnswer && quiz.correctIndex === index ? "bold" : undefined}
-            color={showAnswer ? (
-              quiz.correctIndex === index ? "green.main" : (phase === "answering" ? "text.invLightgray" : "text.lightgray")
-            ) : (
-              "text.gray"
-            )}
-          >
-            {choice}
+        <Box w="full">
+          <Text fontWeight="bold" lineHeight="shorter">
+            {quiz.question || "[Question text unspecified]"}
           </Text>
-        ))}
-      </Stack>
+        </Box>
+        <Stack mt={2} spacing={1}>
+          {quiz.choices.map((choice, index) => (
+            <Text
+              key={index}
+              lineHeight="shorter"
+              fontWeight={showAnswer && quiz.correctIndex === index ? "bold" : undefined}
+              color={showAnswer ? (
+                quiz.correctIndex === index ? "green.main" : (phase === "answering" ? "text.invLightgray" : "text.lightgray")
+              ) : (
+                "text.gray"
+              )}
+            >
+              {choice}
+            </Text>
+          ))}
+        </Stack>
+      </Box>
       <Flex w="full" mt={3} align="center" justify="space-between">
         <Box
           px={2} py={1}
