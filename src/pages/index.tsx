@@ -22,9 +22,9 @@ import { QuizPane } from "src/components/quizPane";
 
 
 // none (トラック未開催), learning (記事投稿フェーズ), answering (クイズ解答フェーズ), finished (終了後)
-type TrackStatus = "none" | "learning" | "answering" | "finished"
+export type TrackPhase = "none" | "learning" | "answering" | "finished"
 
-const getPhase = (quizStartDay: Dayjs | undefined, quizEndDay: Dayjs | undefined): TrackStatus => {
+const getPhase = (quizStartDay: Dayjs | undefined, quizEndDay: Dayjs | undefined): TrackPhase => {
   if (quizStartDay != null && quizEndDay != null) {
     const now = dayjs()
     if (now.isBefore(quizStartDay)) {
@@ -32,7 +32,7 @@ const getPhase = (quizStartDay: Dayjs | undefined, quizEndDay: Dayjs | undefined
     } else if (now.isBefore(quizEndDay)) {
       return "answering"
     } else {
-      return "learning"
+      return "finished"
     }
   } else {
     return "learning"
@@ -251,7 +251,7 @@ const TrackPage: NextPage = () => {
                 Read them carefully as you will be asked from them!
               </Text>
             </Box>
-            <SimpleGrid mt={8} gap={4} w="full" templateColumns="repeat(4, 1fr)">
+            <SimpleGrid mt={8} gap={6} w="full" templateColumns="repeat(4, 1fr)">
               {quizzes.map((quiz, index) => (
                 <GridItem key={index}>
                   <QuizPane quiz={quiz} phase={phase}/>

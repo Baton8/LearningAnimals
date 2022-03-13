@@ -6,21 +6,21 @@ export const colors: Colors = {
     black: "#000000",
     white: "#FFFFFF",
 
-    gray: "#A4AEB7",
-    invGray: "#8D8D93",
+    gray: "hsl(227, 15%, 65%)",
+    invGray: "hsl(227, 20%, 65%)",
 
-    lightgray: "#D7DCE2",
-    invLightgray: "",
+    lightgray: "hsl(227, 15%, 85%)",
+    invLightgray: "hsl(227, 20%, 45%)",
   },
 
   background: {
     white: "#FFFFFF",
-    black: "#000E40",
+    black: "hsl(227, 100%, 13%)",
 
     gray: "#ECEDF0",
     invGray: "",
 
-    main: "#F1F1F1",
+    main: "hsl(0, 0%, 95%)",
     
     transparent: "#00000088",
     blue: {
