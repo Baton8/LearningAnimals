@@ -20,6 +20,8 @@ const button: ComponentStyleConfig = {
         top: "0.25rem",
         _disabled: {
           background: props.background,
+          boxShadow: "0rem 0.25rem black",
+          top: "0rem",    
         },
       },
       _active: {
@@ -27,7 +29,9 @@ const button: ComponentStyleConfig = {
         top: "0.25rem",
         _disabled: {
           background: props.background,
-        },        
+          boxShadow: "0rem 0.25rem black",
+          top: "0rem",    
+        },
       },
       _focus: {
         boxShadow: "0rem 0.25rem black",
@@ -55,6 +59,8 @@ const button: ComponentStyleConfig = {
         top: "0.25rem",
         _disabled: {
           background: props.background,
+          boxShadow: "0rem 0.25rem white",
+          top: "0rem",
         },
       },
       _active: {
@@ -62,7 +68,9 @@ const button: ComponentStyleConfig = {
         top: "0.25rem",
         _disabled: {
           background: props.background,
-        },            
+          boxShadow: "0rem 0.25rem white",
+          top: "0rem",
+        },
       },
       _focus: {
         boxShadow: "0rem 0.25rem white",
