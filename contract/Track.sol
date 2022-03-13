@@ -13,11 +13,6 @@ contract Track is Initializable {
     AnimalNFT animal;
     IERC20 public lac = ERC20(TokenAddress);
 
-    address payable[] solvers;
-    address payable[] writers;
-    address payable[] quizWinners;
-    address payable[] bestQuizWinners;
-
     using Counters for Counters.Counter;
     Counters.Counter private _trackIdCounter;
 
@@ -26,35 +21,31 @@ contract Track is Initializable {
     string public description;
     address owner;
     uint trackId;
-    uint public quizEntryPrize = 1;
-    uint public quizWinPrize = 100;
+    uint public quizEntryPrize = 1 * 10**18;
+    uint public quizWinPrize = 100 * 10**18;
     uint public quizStartTime;
     uint public quizEndTime;
     uint public quizCreateEntryStartTime;
     uint public quizCreateEntryEndTime;
     
-    QuizNFT[] public quizs;
-    QuizNFT[] public selectedQuiz;
+    QuizNFT[] public quizzes;
+    QuizNFT[] public selectedQuizzes;
 
-    mapping(address => uint[]) answers;
-    mapping(address => uint) earnAmount;
-    mapping(address => uint) answerTimes;
-    mapping(address => bool) hasEntryQuiz;
-    mapping(address => bool) hasQuizPrizeClaimed;
-    mapping(address => bool) hasBestQuizPrizeClaimed;
+    mapping(address => uint) public earnAmountOf;
+    mapping(QuizNFT => uint) trackIdOf;
     
     constructor() {}
 
-    function initialize(string memory _title, string memory _description) public initializer { 
+    function restartTrack(string memory _title, string memory _description) public  { 
         title = _title;
         description = _description;
         owner = msg.sender;
         trackId = _trackIdCounter.current();
         _trackIdCounter.increment();
         quizCreateEntryStartTime = block.timestamp;
-        quizCreateEntryEndTime = block.timestamp + 30 seconds;
-        quizStartTime =  block.timestamp + 60 seconds;
-        quizEndTime = block.timestamp + 120 seconds;
+        quizCreateEntryEndTime = block.timestamp + 300 seconds;
+        quizStartTime =  block.timestamp + 300 seconds;
+        quizEndTime = block.timestamp + 600 seconds;
     }
 
     //-------------------------------------------------------------------------
@@ -62,122 +53,65 @@ contract Track is Initializable {
     //-------------------------------------------------------------------------
 
       function createQuiz(string memory _question, string[4] memory _choices, uint _correctIndex) public {
-         QuizNFT newQuiz = new QuizNFT(quizs.length, _question, _choices, _correctIndex);
-         quizs.push(newQuiz);
+        uint newQuizId = quizzes.length;
+         QuizNFT newQuiz = new QuizNFT(newQuizId, _question, _choices, _correctIndex);
+         quizzes.push(newQuiz);
+         trackIdOf[newQuiz] = trackId;
       }
 
-     function answerQuestion(uint[] memory _choiceIndexs, uint time) public {
+     function answerQuestion(uint[] memory _choosedIndices, uint _playTime) public {
         require(block.timestamp > quizStartTime, "Quiz not starts yet");
         require(block.timestamp < quizEndTime, "Already quiz ended");
-        require(_choiceIndexs.length == quizs.length, "Answer Index Count and Quiz count is not same");
-        require(lac.balanceOf(address(this)) >= quizEntryPrize, "not enought token balanace");
+        require(lac.balanceOf(address(this)) >= quizEntryPrize, "not enough token balanace");
         require(owner != msg.sender, "Owner can't entry the quiz");
 
-        solvers.push(payable(msg.sender));
-        answers[msg.sender] = _choiceIndexs;
-        answerTimes[msg.sender] = time;
+        earnAmountOf[msg.sender] += quizEntryPrize;
 
-        earnAmount[msg.sender] += quizEntryPrize;
+        uint _correctAnswerCount = 0;
+        for(uint i = 0; i < 5; i++) { 
+            if (_choosedIndices[i] == selectedQuizzes[i].getCorrectIndex()) {
+                _correctAnswerCount++;
+            }
+        }
+        
+        if (_correctAnswerCount == 5) {
+            earnAmountOf[msg.sender] += quizWinPrize;
+        }
+        if (_playTime == _playTime) {}
      }
 
      function withdraw() public payable {
-         lac.transfer(msg.sender, earnAmount[msg.sender]);
+         lac.transfer(msg.sender, earnAmountOf[msg.sender]);
      }
 
      function getNFTofWinQuiz(uint _tokenId) public {
          animal.transfer(owner, msg.sender, _tokenId);
      }
 
-    //-------------------------------------------------------------------------
-    // OWNER FUNC
-    //-------------------------------------------------------------------------
-
-      function selectWinnerForQuiz() public {
-
-         require(owner == msg.sender, "Only Owner can execute");
-         require(block.timestamp > quizEndTime, "Select winner can call when event end");
-
-         for(uint i = 0 ; i <solvers.length; i++) {
-            bool allCorrect = true;
-            uint[] memory userAnswers = answers[solvers[i]];
-
-            for(uint j = 0; j < quizs.length; j++) {
-               
-               if(userAnswers[j] != quizs[j].getCorrectIndex()) {
-                  allCorrect = false;
-               }
-            }
-
-            if(allCorrect == true) {
-               hasQuizPrizeClaimed[solvers[i]] = false;
-               quizWinners.push(solvers[i]);
-               earnAmount[solvers[i]] += quizWinPrize;
-            } 
+     function startQuiz() public {
+        if (selectedQuizzes.length == 0) {
+             selectedQuizzes.push(quizzes[0]);
+             selectedQuizzes.push(quizzes[1]);
+             selectedQuizzes.push(quizzes[2]);
+             selectedQuizzes.push(quizzes[3]);
+             selectedQuizzes.push(quizzes[4]);
          }
-      }
+     }
 
-      function selectQuestionQuiz() public {
-
-         require(owner == msg.sender, "Only Owner can execute");
-
-         uint questionCount = 5;
-         if(quizs.length < questionCount) {
-            questionCount = quizs.length;
-         }
-
-         for(uint i = 0; i < questionCount; i++) {
-            uint randomIndex = uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, quizs.length)));
-            selectedQuiz.push(quizs[randomIndex]);
-            bestQuizWinners.push(payable(quizs[randomIndex].getOwner()));
-         }
-      }
 
     //-------------------------------------------------------------------------
     // VIEW FUNCTIONS
     //-------------------------------------------------------------------------
 
      function getSelectedQuizzes(uint _questionIndex) public view returns(string memory, string[] memory) {
-        string memory question = quizs[_questionIndex].getQuestion();
-        string[] memory choices = quizs[_questionIndex].getChoices();
+        string memory question = selectedQuizzes[_questionIndex].getQuestion();
+        string[] memory choices = selectedQuizzes[_questionIndex].getChoices();
         return (question, choices);
      }
 
      function getQuizzes() public view returns(QuizNFT[] memory) {
-        return quizs;
+        return quizzes;
      }
-    
-     function checkQuizPrize() public view returns(bool) { 
-        bool hasPrize = false;
-        for(uint i = 0; i < quizWinners.length; i++) {
-           if(quizWinners[i] == msg.sender) {
-              hasPrize = true;
-           }
-        }
-        return hasPrize;
-      }
-
-      function checkBestQuizPrize() public view returns(bool) { 
-        bool hasPrize = false;
-        for(uint i = 0; i < bestQuizWinners.length; i++) {
-
-           if(bestQuizWinners[i] == msg.sender) {
-              hasPrize = true;
-           }
-        }
-        return hasPrize;
-      }
-
-      function getTrackResult() public view returns(uint, uint, bool, bool) {
-         uint correctCount = 0;
-         uint[] memory userAnswers = answers[msg.sender];
-         for(uint i = 0; i < quizs.length; i++) {
-            if(userAnswers[i] == quizs[i].getCorrectIndex()) {
-               correctCount++;
-            }
-         }
-
-         return(earnAmount[msg.sender], correctCount, checkQuizPrize(), checkBestQuizPrize());
-      }
 
       function isEndTrack() public view returns (bool) {
          return block.timestamp > quizEndTime;
