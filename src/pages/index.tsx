@@ -189,16 +189,8 @@ const TrackPage: NextPage = () => {
               >
                 <Flex gap={4} align="center" color="text.white">
                   <Box textAlign="center">
-                    <Box>2nd</Box>
-                    <Image w={14} h={14} mt={1} rounded="full" src="http://via.placeholder.com/56x56" alt=""/>
-                  </Box>
-                  <Box textAlign="center">
-                    <Box fontSize="lg">1st</Box>
+                    <Box fontSize="lg">Top 5</Box>
                     <Image w={20} h={20} mt={1} rounded="full" src="http://via.placeholder.com/80x80" alt=""/>
-                  </Box>
-                  <Box textAlign="center">
-                    <Box>3rd</Box>
-                    <Image w={14} h={14} mt={1} rounded="full" src="http://via.placeholder.com/56x56" alt=""/>
                   </Box>
                 </Flex>
               </WhiteBox>
