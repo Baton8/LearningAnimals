@@ -151,7 +151,7 @@ const TrackPage: NextPage = () => {
                   background={phase === "answering" ? "text.invTitle" : "text.title"}
                   rounded="md"
                 >
-                  {answerQuizStartDay?.format("DD MMM YYYY · HH:mm")}–{answerQuizEndDay?.format("HH:mm")}
+                  {answerQuizStartDay?.format("DD MMM YYYY · HH:mm")} –
                 </Box>
                 <Box mt={4} fontSize="lg" color="text.white" textShadow="overImage">
                    All participants will receive:{" "}
