@@ -21,7 +21,8 @@ export const QuizPageFinishedLayout: React.FC<Props> = ({
       w="full" h="100vh" px={24} py={12}
       direction="column"
       align="center" justify="center"
-      baxkground="background.main"
+      background="url('/result_background.png')"
+      backgroundSize="cover"
     >
       <WhiteBox px={24} py={10} flexDirection="column" alignItems="center" variant="invBox">
         <Text>Result</Text>
