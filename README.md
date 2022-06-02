@@ -28,6 +28,9 @@ The ways to earn tokens are as follows:
 ## Design
 
 https://www.figma.com/file/uMvguG8pKhc9S0gNwTwoVB/Learning-Animals?node-id=184%3A2536
+![AppQuizAnswer](https://user-images.githubusercontent.com/4179632/171727803-fd6c9a8d-5b9f-4d45-8707-a182e29ba08c.png)
+
+![AppLog](https://user-images.githubusercontent.com/4179632/171727791-47b3b3f2-2e01-4c1e-9d42-5567e6156db5.png)
 
 
 
